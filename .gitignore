@@ -1,0 +1,11 @@
+.idea
+.DS_Store
+.sass-cache
+dist/
+node_modules
+app/style/.sass-cache
+npm-debug.log
+translators/ui_libs
+config.json
+translators/components/*.json
+webpack.s3.config.json
