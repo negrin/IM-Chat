@@ -3,6 +3,7 @@ import { render } from 'react-dom';
 import { Router, Route, Redirect, hashHistory } from 'react-router';
 import Layout from './layout/layout';
 import LoginPage from './pages/login';
+import './styles/main.scss';
 
 const app = (
     <Router history={ hashHistory }>
