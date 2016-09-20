@@ -1,15 +1,14 @@
 // import React from 'react';
 import { render } from 'react-dom';
-import { Router, Route, Redirect, hashHistory } from 'react-router';
-import Layout from './layout/layout';
-import LoginPage from './pages/login';
+import { IndexRoute, Router, Route, browserHistory } from 'react-router';
+import Root from './layout/root';
+import Main from './pages/main';
 import './styles/main.scss';
 
 const app = (
-    <Router history={ hashHistory }>
-        <Redirect from="/" to="/login"/>
-        <Route path="/" component={ Layout }>
-            <Route path="login" component={ LoginPage }/>
+    <Router history={ browserHistory }>
+        <Route path="/" component={ Root }>
+            <IndexRoute component={ Main }/>
         </Route>
     </Router>
 );

@@ -3,14 +3,14 @@ const path = require('path');
 const appPath = path.join(__dirname, 'app');
 const distPath = path.join(__dirname, 'dist');
 const exclude = [/node_modules/];
-const lintExcludes = [/node_modules/, appPath + '/scene', appPath + '/tmp_kits'];
+const lintExcludes = [/node_modules/];
 const CleanPlugin = require('clean-webpack-plugin');
 const HtmlPlugin = require('html-webpack-plugin');
 
 // Webpack dashboard
-// const Dashboard = require('webpack-dashboard');
-// const DashboardPlugin = require('webpack-dashboard/plugin');
-// const dashboard = new Dashboard();
+const Dashboard = require('webpack-dashboard');
+const DashboardPlugin = require('webpack-dashboard/plugin');
+const dashboard = new Dashboard();
 
 const config = {
     context: appPath,
@@ -47,7 +47,7 @@ const config = {
         }),
 
         // Webpack dashboard
-        // new DashboardPlugin(dashboard.setData)
+        new DashboardPlugin(dashboard.setData)
     ],
 
     module: {
@@ -96,8 +96,8 @@ const config = {
         contentBase: './app',
         colors: true,
         noInfo: true,
-        historyApiFallback: true
-        // quiet: true // lets WebpackDashboard do its thing
+        historyApiFallback: true,
+        quiet: true // lets WebpackDashboard do its thing
     },
 
     resolve: {
