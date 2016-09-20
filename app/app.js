@@ -1,4 +1,3 @@
-// import React from 'react';
 import { render } from 'react-dom';
 import { IndexRoute, Router, Route, browserHistory } from 'react-router';
 import Root from './layout/root';
