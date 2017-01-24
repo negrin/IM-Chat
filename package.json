@@ -4,21 +4,25 @@
   "description": "XO Next Generation",
   "main": "index.js",
   "scripts": {
-    "dev": "NODE_ENV=local webpack-dev-server --host 0.0.0.0 --config webpack.config.dev.js --devtool eval --progress --hot --inline"
+    "dev": "NODE_ENV=local webpack-dev-server --host 0.0.0.0 --config webpack.config.dev.js --devtool eval --progress --hot --inline",
+    "build": "NODE_ENV=production  webpack --config webpack.config.prod.js --progress --colors --bail"
   },
-  "author": "Nitzan Sankevitz",
+  "author": "Tal Negrin",
   "dependencies": {
+    "copy-webpack-plugin": "^4.0.1",
     "eslint": "1.10.3",
     "eslint-loader": "1.2.0",
     "eslint-plugin-filenames": "^1.1.0",
     "eslint-plugin-react": "3.15.0",
+    "firebase": "^3.6.1",
     "history": "1.17.0",
     "immutable": "3.7.5",
     "lodash": "4.0.0",
     "react": "^15.2.1",
     "react-addons-css-transition-group": "^15.2.1",
     "react-dom": "^15.2.1",
-    "react-gravatar": "^2.4.5",
+    "react-gravatar": "^2.6.1",
+    "react-iframe": "0.0.4",
     "react-redux": "^4.4.5",
     "react-router": "^2.6.1",
     "react-router-redux": "2.1.0",

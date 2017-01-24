@@ -1,0 +1,24 @@
+$margin: 5px;
+
+.chat{
+  height: 100vh;
+  display: flex;
+  .chat-user-list{
+    background: $main-color;
+    width: 230px;
+  }
+  .chat-body{
+    flex-grow: 5;
+    background: #e8e8e8;
+    display: flex;
+    flex-direction: column;
+    .chat-messages{
+      overflow: auto;
+      flex: 4;
+      margin: $margin;
+    }
+    .chat-new-message{
+      margin-bottom: 0;
+    }
+  }
+}

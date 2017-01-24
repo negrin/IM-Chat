@@ -1,0 +1,49 @@
+.sing-in{
+  display: flex;
+  margin: 0 auto;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: $main-color;
+  border-radius: 5px;
+  height: 300px;
+  width: 450px;
+  ::-webkit-input-placeholder{
+    font-size: 20px;
+  }
+  .sing-in-text{
+    font-size: 20px;
+    color: #e8e8e8;
+    margin: 5px;
+    height: 30px;
+    padding: 3px;
+    width: 300px;
+    border: 0;
+    background: rgba(0,0,0,0);
+    border-bottom: 1px solid #858d95;
+    &:focus {
+      border-bottom: 2px solid #ffffff;
+    }
+  }
+  .sing-in-btn{
+    margin-top: 50px;
+    width: 100px;
+    height: 50px;
+    background: #025984;
+    border: 0;
+    border-radius: 4px;
+    color: #e8e8e8;
+    font-size: 20px;
+    cursor: pointer;
+  }
+}
+.singing-overlay{
+  background:rgba(0,0,0,0.6);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  align-items: center;
+  flex: 1;
+}
