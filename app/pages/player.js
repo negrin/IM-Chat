@@ -9,9 +9,11 @@ class Player extends React.Component {
 
     constructor() {
         super();
+
         this.state = {
             playerHeight: ''
         };
+
         this._resizeScreen = this._resizeScreen.bind(this);
     }
 
@@ -134,6 +136,7 @@ class Player extends React.Component {
                     ref={ (video) => this.youtubeVideo = video }
                     videoId={ videoId }
                     onReady={ this._onReady }
+                    onEnd={ this.props.selectNextVideo }
                     className="youtube-player"/>
             </div>
         );
