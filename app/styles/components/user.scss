@@ -7,19 +7,27 @@
     height: 40px;
     width: 40px;
   }
-  .user-name{
+  .user-info {
     display: flex;
-    align-items: center;
-    font-size: 20px;
-    margin-left: 5px;
-    color: $userNameColor;
-  }
-  .user-typing{
-    font-size: 10px;
-    color: #d5d5d5;
-    display: flex;
-    align-items: flex-end;
-    padding-bottom: 10px;
-    margin-left: 3px;
+    flex-direction: column;
+    width: 240px;
+
+    .user-name{
+      font-size: 20px;
+      margin-left: 5px;
+      color: $userNameColor;
+      overflow-x: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+    .user-typing{
+      font-size: 10px;
+      color: #d5d5d5;
+      display: flex;
+      align-items: flex-end;
+      padding-bottom: 10px;
+      margin-left: 5px;
+    }
+
   }
 }

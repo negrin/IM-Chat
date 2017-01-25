@@ -33,8 +33,10 @@ class User extends React.Component {
         return (
             <div className="user">
                 <Gravatar className="user-icon" email={ this.props.user.name } />
-                <div className="user-name">{ this.props.user.name }</div>
-                { this.props.user.isTyping ? <div className="user-typing">typing{ this.state.dots }</div> : null }
+                <div className="user-info">
+                    <div className="user-name">{ this.props.user.name }</div>
+                    { this.props.user.isTyping ? <div className="user-typing">typing{ this.state.dots }</div> : null }
+                </div>
             </div>
         );
     }
