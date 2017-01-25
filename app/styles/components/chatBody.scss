@@ -9,7 +9,7 @@ $margin: 5px;
   }
   .chat-body{
     flex-grow: 5;
-    background: #e8e8e8;
+    background: $secondary-color;
     display: flex;
     flex-direction: column;
     .chat-messages{

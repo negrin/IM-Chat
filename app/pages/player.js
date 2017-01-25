@@ -1,4 +1,5 @@
 import { connect } from 'react-redux';
+import cx from 'classnames';
 import YouTube from 'react-youtube';
 import Gravatar from 'react-gravatar';
 import { addVideo, selectNextVideo } from '../reduxStore/actions/playerActions';
@@ -138,11 +139,32 @@ class Player extends React.Component {
         );
     }
 
+    _rendePlaylist() {
+        return (
+            <div className="playlist-panel">
+                {
+                    this.props.playlist.map((video) => {
+                        const videoClassName = cx({
+                            selected: video.videoId === this.props.currentVideo.videoId
+                        });
+
+                        return (
+                            <div className={ videoClassName }>{ video.videoId }</div>
+                        );
+                    })
+                }
+            </div>
+        );
+    }
+
     render() {
         return (
             <div className="player-page" >
-                { this._renderName() }
-                { this._renderPlayer() }
+                { this._rendePlaylist() }
+                <div className="player-container">
+                    { this._renderName() }
+                    { this._renderPlayer() }
+                </div>
             </div>
 
         );
@@ -153,11 +175,12 @@ const mapStateToProps = (state) => {
     const { playlist, currentPlayedIndex } = state.playerReducer.toJS();
     const currentVideo = playlist[currentPlayedIndex || 0] || {};
 
-    return { currentVideo };
+    return { currentVideo, playlist };
 };
 
 Player.propTypes = {
     currentVideo: React.PropTypes.object.isRequired,
+    playlist: React.PropTypes.array.isRequired,
     addVideo: React.PropTypes.func.isRequired,
     selectNextVideo: React.PropTypes.func.isRequired
 };
