@@ -15,6 +15,14 @@ class Main extends React.Component {
         this.subscribeFB();
     }
 
+    componentDidUpdate() {
+        this._getMassageDivHeight();
+    }
+
+    _getMassageDivHeight() {
+        this.massageDiv.scrollTop = this.massageDiv.scrollHeight;
+    }
+
     subscribeFB() {
         FirebaseAPI.onChange('child_added', 'comments', (e) => {
             this.props.getComments();
