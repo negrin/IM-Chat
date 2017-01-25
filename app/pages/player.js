@@ -46,14 +46,19 @@ class Main extends React.Component {
     _cutString() {
         const string = this.props.comments[this.props.comments.length - 1].text;
 
-        if (string === 'stop' || string === 'pause') {
+        if (string.startsWith('/stop') || string.startsWith('/pause')) {
             setTimeout(() => this.youtubeVideo.internalPlayer.pauseVideo());
-        } else if (string === 'play') {
+        } else if (string.startsWith('/play')) {
             setTimeout(() => this.youtubeVideo.internalPlayer.playVideo());
-        } else {
-            const cutString = string.substr(string.length - 11);
+        } else if (string.startsWith('/add')) {
+            let video_id = string.split('v=')[1];
+            const ampersandPosition = video_id.indexOf('&');
 
-            return cutString;
+            if (ampersandPosition !== -1) {
+                video_id = video_id.substring(0, ampersandPosition);
+            }
+
+            return video_id;
         }
     }
 
