@@ -1,8 +1,7 @@
 import { connect } from 'react-redux';
 import YouTube from 'react-youtube';
 import Gravatar from 'react-gravatar';
-import { getComments } from '../reduxStore/actions/commentActions';
-import { getUsers } from '../reduxStore/actions/usersActions';
+import { addVideo, selectNextVideo } from '../reduxStore/actions/playerActions';
 import FirebaseAPI from '../firebase/firebase';
 
 class Player extends React.Component {
@@ -10,9 +9,7 @@ class Player extends React.Component {
     constructor() {
         super();
         this.state = {
-            playerHeight: '',
-            userName: null,
-            videoId: null
+            playerHeight: ''
         };
         this._resizeScreen = this._resizeScreen.bind(this);
     }
@@ -23,8 +20,11 @@ class Player extends React.Component {
         this.subscribeFB();
     }
 
-    componentDidUpdate(prevProps, prevState) {
-        if (this.state.videoId !== prevState.videoId) {
+    componentDidUpdate(prevProps) {
+        const { currentVideo = {} } = this.props;
+        const { prevVideo = {} } = prevProps;
+
+        if (currentVideo.videoId !== prevVideo.videoId) {
             setTimeout(() => this.youtubeVideo.internalPlayer.playVideo());
         }
     }
@@ -75,7 +75,11 @@ class Player extends React.Component {
                     videoId = videoId.substring(0, ampersandPosition);
                 }
 
-                this.setState({ videoId, userName });
+                this.props.addVideo({ videoId, userName });
+
+                break;
+            case 'next':
+                this.props.selectNextVideo();
 
                 break;
             default:
@@ -92,7 +96,7 @@ class Player extends React.Component {
     }
 
     _renderName() {
-        const { userName } = this.state;
+        const { userName } = this.props.currentVideo;
 
         if (!userName) {
             return null;
@@ -109,7 +113,9 @@ class Player extends React.Component {
     }
 
     _renderPlayer() {
-        if (!this.state.videoId) {
+        const { videoId } = this.props.currentVideo;
+
+        if (!videoId) {
             return null;
         }
 
@@ -119,7 +125,7 @@ class Player extends React.Component {
                  ref={ (div) => this.youtubePlaceHolder = div }>
                 <YouTube
                     ref={ (video) => this.youtubeVideo = video }
-                    videoId={ this.state.videoId }
+                    videoId={ videoId }
                     onReady={ this._onReady }
                     className="youtube-player"/>
             </div>
@@ -138,13 +144,16 @@ class Player extends React.Component {
 }
 
 const mapStateToProps = (state) => {
-    return {
+    const { playlist, currentPlayedIndex } = state.playerReducer.toJS();
+    const currentVideo = playlist[currentPlayedIndex || 0] || {};
 
-    };
+    return { currentVideo };
 };
 
 Player.propTypes = {
-
+    currentVideo: React.PropTypes.object.isRequired,
+    addVideo: React.PropTypes.func.isRequired,
+    selectNextVideo: React.PropTypes.func.isRequired
 };
 
-export default connect(mapStateToProps, { getComments, getUsers })(Player);
+export default connect(mapStateToProps, { addVideo, selectNextVideo })(Player);
