@@ -60,6 +60,12 @@ class Player extends React.Component {
         const userName = e.name;
 
         switch (command) {
+            case 'volume':
+            case 'vol':
+                if (!isNaN(commandParam) && commandParam >= 0 && commandParam <= 100) {
+                    setTimeout(() => this.youtubeVideo.internalPlayer.setVolume(commandParam));
+                }
+                break;
             case 'stop':
             case 'pause':
                 setTimeout(() => this.youtubeVideo.internalPlayer.pauseVideo());
