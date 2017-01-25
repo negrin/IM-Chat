@@ -5,12 +5,14 @@ import { getComments } from '../reduxStore/actions/commentActions';
 import { getUsers } from '../reduxStore/actions/usersActions';
 import FirebaseAPI from '../firebase/firebase';
 
-class Main extends React.Component {
+class Player extends React.Component {
 
     constructor() {
         super();
         this.state = {
-            playerHeight: ''
+            playerHeight: '',
+            userName: null,
+            videoId: null
         };
         this._resizeScreen = this._resizeScreen.bind(this);
     }
@@ -18,9 +20,13 @@ class Main extends React.Component {
     componentDidMount() {
         setTimeout(() => this._resizeScreen());
         window.addEventListener('resize', this._resizeScreen.bind(this));
-        this.props.getUsers();
-        this.props.getComments();
         this.subscribeFB();
+    }
+
+    componentDidUpdate(prevProps, prevState) {
+        if (this.state.videoId !== prevState.videoId) {
+            setTimeout(() => this.youtubeVideo.internalPlayer.playVideo());
+        }
     }
 
     componentWillUnmount() {
@@ -29,36 +35,51 @@ class Main extends React.Component {
 
     subscribeFB() {
         FirebaseAPI.onChange('child_added', 'comments', (e) => {
-            this.props.getComments();
-            this._handleNewSong();
+            // TODO - temp solution for not handling precious (existing) comments
+            const now = new Date();
+            let minutes = now.getMinutes();
+
+            if (minutes.toString().length === 1) {
+                minutes = `0${minutes}`;
+            }
+            const currentTime = `${now.getHours()}:${minutes}`;
+
+            if (e.text && e.text[0] === '/' && currentTime === e.date) {
+                this._parseCommand(e);
+            }
         });
     }
+
     _onReady(event) {
         event.target.playVideo();
     }
 
-    _handleNewSong() {
-        if (this.youtubeVideo) {
-            setTimeout(() => this.youtubeVideo.internalPlayer.playVideo());
-        }
-    }
+    _parseCommand(e) {
+        const command = e.text.substr(1).split(' ')[0];
+        const commandParam = e.text.substr(1).split(' ')[1];
+        const userName = e.name;
 
-    _cutString() {
-        const string = this.props.comments[this.props.comments.length - 1].text;
+        switch (command) {
+            case 'stop':
+            case 'pause':
+                setTimeout(() => this.youtubeVideo.internalPlayer.pauseVideo());
+                break;
+            case 'play':
+                setTimeout(() => this.youtubeVideo.internalPlayer.playVideo());
+                break;
+            case 'add':
+                let videoId = commandParam.split('v=')[1];
+                const ampersandPosition = videoId.indexOf('&');
 
-        if (string.startsWith('/stop') || string.startsWith('/pause')) {
-            setTimeout(() => this.youtubeVideo.internalPlayer.pauseVideo());
-        } else if (string.startsWith('/play')) {
-            setTimeout(() => this.youtubeVideo.internalPlayer.playVideo());
-        } else if (string.startsWith('/add')) {
-            let video_id = string.split('v=')[1];
-            const ampersandPosition = video_id.indexOf('&');
+                if (ampersandPosition !== -1) {
+                    videoId = videoId.substring(0, ampersandPosition);
+                }
 
-            if (ampersandPosition !== -1) {
-                video_id = video_id.substring(0, ampersandPosition);
-            }
+                this.setState({ videoId, userName });
 
-            return video_id;
+                break;
+            default:
+                break;
         }
     }
 
@@ -71,10 +92,14 @@ class Main extends React.Component {
     }
 
     _renderName() {
-        const userName = this.props.comments[this.props.comments.length - 1].name;
+        const { userName } = this.state;
+
+        if (!userName) {
+            return null;
+        }
 
         return (
-            <div>
+            <div className="player-name">
                 <Gravatar
                     className="user-icon"
                     email={ userName } />
@@ -83,26 +108,29 @@ class Main extends React.Component {
         );
     }
 
+    _renderPlayer() {
+        if (!this.state.videoId) {
+            return null;
+        }
+
+        return (
+            <div className="youtube-holder"
+                 style={ { height: this.state.playerHeight } }
+                 ref={ (div) => this.youtubePlaceHolder = div }>
+                <YouTube
+                    ref={ (video) => this.youtubeVideo = video }
+                    videoId={ this.state.videoId }
+                    onReady={ this._onReady }
+                    className="youtube-player"/>
+            </div>
+        );
+    }
+
     render() {
         return (
             <div className="player-page" >
-                <div className="player-name">
-                    { this.props.comments.length >= 1
-                        ? this._renderName()
-                        : null }
-                </div>
-                <div className="youtube-holder"
-                    style={ { height: this.state.playerHeight } }
-                     ref={ (div) => this.youtubePlaceHolder = div }>
-                    { this.props.comments.length >= 1
-                        ? <YouTube
-                        ref={ (video) => this.youtubeVideo = video }
-                        videoId={ this._cutString() }
-                        onReady={ this._onReady }
-                        className="youtube-player"/>
-                        : null
-                    }
-                </div>
+                { this._renderName() }
+                { this._renderPlayer() }
             </div>
 
         );
@@ -111,16 +139,12 @@ class Main extends React.Component {
 
 const mapStateToProps = (state) => {
     return {
-        comments: state.commentReducer.toJS(),
-        users: state.userReducer.toJS()
+
     };
 };
 
-Main.propTypes = {
-    comments: React.PropTypes.array,
-    users: React.PropTypes.array,
-    getComments: React.PropTypes.func,
-    getUsers: React.PropTypes.func
+Player.propTypes = {
+
 };
 
-export default connect(mapStateToProps, { getComments, getUsers })(Main);
+export default connect(mapStateToProps, { getComments, getUsers })(Player);
