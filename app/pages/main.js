@@ -24,20 +24,22 @@ class Main extends React.Component {
     }
 
     subscribeFB() {
-        FirebaseAPI.onChange('child_added', `players/${ this.props.params.playerID }/comments`, () => {
-            this.props.getComments(this.props.params.playerID);
+        const { playerID } = this.props.params;
+
+        FirebaseAPI.onChange('child_added', `players/${ playerID }/comments`, () => {
+            this.props.getComments(playerID);
         });
-        FirebaseAPI.onChange('child_removed', `players/${ this.props.params.playerID }/comments`, () => {
-            this.props.getComments(this.props.params.playerID);
+        FirebaseAPI.onChange('child_removed', `players/${ playerID }/comments`, () => {
+            this.props.getComments(playerID);
         });
-        FirebaseAPI.onChange('child_added', `players/${ this.props.params.playerID }/users`, () => {
-            this.props.getUsers(this.props.params.playerID);
+        FirebaseAPI.onChange('child_added', `players/${ playerID }/users`, () => {
+            this.props.getUsers(playerID);
         });
-        FirebaseAPI.onChange('child_removed', `players/${ this.props.params.playerID }/users`, () => {
-            this.props.getUsers(this.props.params.playerID);
+        FirebaseAPI.onChange('child_removed', `players/${ playerID }/users`, () => {
+            this.props.getUsers(playerID);
         });
-        FirebaseAPI.onChange('child_changed', `players/${ this.props.params.playerID }/users`, () => {
-            this.props.getUsers(this.props.params.playerID);
+        FirebaseAPI.onChange('child_changed', `players/${ playerID }/users`, () => {
+            this.props.getUsers(playerID);
         });
     }
 
