@@ -47,7 +47,7 @@ class TextInput extends React.Component {
             };
 
             this._handleIsTyping(false);
-            this.props.postNewComment(newComment);
+            this.props.postNewComment(newComment, this.props.playerID);
             this.textInput.value = '';
             this.setState({ isTextBoxEmpty: true });
         }
@@ -56,8 +56,8 @@ class TextInput extends React.Component {
     _handleIsTyping(value) {
         this.props.users.find((user) => {
             if (user.userID === this.props.activeUser.id) {
-                this.props.isTyping(user.id, value);
-                setTimeout(() => { this.props.isTyping(user.id, false); }, 3000);
+                this.props.isTyping(user.id, value, this.props.playerID);
+                setTimeout(() => { this.props.isTyping(user.id, false, this.props.playerID); }, 3000);
                 return true;
             }
         });
@@ -100,6 +100,7 @@ const mapStateToProps = (state) => {
 
 TextInput.propTypes = {
     isTyping: React.PropTypes.func,
+    playerID: React.PropTypes.string,
     postNewComment: React.PropTypes.func,
     activeUser: React.PropTypes.object,
     comments: React.PropTypes.array,

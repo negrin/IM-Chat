@@ -2,7 +2,8 @@ import Immutable from 'immutable';
 
 const initialState = Immutable.fromJS({
     playlist: [],
-    currentPlayedIndex: null
+    currentPlayedIndex: null,
+    playerID: null
 });
 
 export default function (state = initialState, action = {}) {
@@ -17,6 +18,12 @@ export default function (state = initialState, action = {}) {
             const currentPlayedIndex = state.toJS().currentPlayedIndex === null ? playlist.length - 1 : state.toJS().currentPlayedIndex;
 
             return Immutable.fromJS({ playlist, currentPlayedIndex });
+        }
+        case 'GET_PLAYER_ID': {
+            let playerID = state.toJS().playerID;
+
+            playerID = action.payload;
+            return Immutable.fromJS({ playerID });
         }
         case 'SELECT_NEXT_VIDEO': {
             const { playlist, currentPlayedIndex = -1 } = state.toJS();

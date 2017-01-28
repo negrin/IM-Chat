@@ -37,7 +37,7 @@ class Player extends React.Component {
     }
 
     subscribeFB() {
-        FirebaseAPI.onChange('child_added', 'comments', (e) => {
+        FirebaseAPI.onChange('child_added', `players/${ this.props.params.playerID }/comments`, (e) => {
             // TODO - temp solution for not handling precious (existing) comments
             const now = new Date();
             let minutes = now.getMinutes();
@@ -51,10 +51,6 @@ class Player extends React.Component {
                 this._parseCommand(e);
             }
         });
-    }
-
-    _onReady(event) {
-        event.target.playVideo();
     }
 
     _parseCommand(e) {
@@ -160,6 +156,11 @@ class Player extends React.Component {
         );
     }
 
+    _onReady(event) {
+        event.target.playVideo();
+        setTimeout(() => this._resizeScreen());
+    }
+
     render() {
         return (
             <div className="player-page" >
@@ -183,6 +184,7 @@ const mapStateToProps = (state) => {
 
 Player.propTypes = {
     currentVideo: React.PropTypes.object.isRequired,
+    params: React.PropTypes.object.isRequired,
     playlist: React.PropTypes.array.isRequired,
     addVideo: React.PropTypes.func.isRequired,
     selectNextVideo: React.PropTypes.func.isRequired

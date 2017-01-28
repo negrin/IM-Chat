@@ -11,26 +11,26 @@ export default function firebaseMiddleware({ getState, dispatch }) {
                     dispatch(syncComments(e));
                 };
 
-                FirebaseAPI.getData('comments', getCommentsFromFB);
+                FirebaseAPI.getData(`players/${ action.payload }/comments`, getCommentsFromFB);
                 break;
             case 'POST_NEW_COMMENT':
-                FirebaseAPI.push('comments', action.payload);
+                FirebaseAPI.push(`players/${ action.payload.playerID }/comments`, action.payload.comment);
                 break;
             case 'POST_NEW_USER':
-                FirebaseAPI.push('users', action.payload);
+                FirebaseAPI.push(`players/${ action.payload.playerID }/users`, action.payload.user);
                 break;
             case 'REMOVE_USER':
-                FirebaseAPI.remove(`${ 'users/' }${ action.payload }`);
+                FirebaseAPI.remove(`players/${ action.payload.playerID }/users/${ action.payload.id }`);
                 break;
             case 'IS_TYPING':
-                FirebaseAPI.add(`${ 'users/' }${ action.payload.id }${ '/isTyping' }`, action.payload.value);
+                FirebaseAPI.add(`players/${ action.payload.playerID }/users/${ action.payload.id }/isTyping`, action.payload.value);
                 break;
             case 'GET_USERS':
                 const getUsersFromFB = (e) => {
                     dispatch(syncUsers(e));
                 };
 
-                FirebaseAPI.getData('users', getUsersFromFB);
+                FirebaseAPI.getData(`players/${ action.payload }/users`, getUsersFromFB);
                 break;
             default:
                 break;

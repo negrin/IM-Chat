@@ -3,6 +3,7 @@ import { IndexRoute, Router, Route, browserHistory } from 'react-router';
 import Immutable from 'immutable';
 import Root from './layout/root';
 import Main from './pages/main';
+import Craft from './pages/craft';
 import Player from './pages/player';
 import './styles/main.scss';
 
@@ -24,10 +25,10 @@ const app = (
     <Provider store={ store }>
         <Router history={ browserHistory }>
             <Route path="/" component={ Root }>
-                <IndexRoute component={ Main }/>
+                <IndexRoute component={ Craft }/>
             </Route>
-            <Route path="home" component={ Main } />
-            <Route path="player" component={ Player } />
+            <Route path=":playerID" component={ Main } />
+            <Route path=":playerID/player" component={ Player } />
         </Router>
     </Provider>
 );

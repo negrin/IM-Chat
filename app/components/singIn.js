@@ -41,7 +41,7 @@ class SingIn extends React.Component {
                 isTyping: false
             };
 
-            this.props.postNewUser(newUser);
+            this.props.postNewUser(newUser, this.props.playerID);
             this.nameInput.value = '';
             this.setState({ isSingInOver: true });
         } else {
@@ -60,7 +60,7 @@ class SingIn extends React.Component {
     _handleSingOut() {
         this.props.users.find((user) => {
             if (user.userID === this.props.activeUser.id) {
-                this.props.removeUser(user.id);
+                this.props.removeUser(user.id, this.props.playerID);
                 return true;
             }
         });
@@ -101,6 +101,7 @@ const mapStateToProps = (state) => {
 
 SingIn.propTypes = {
     users: React.PropTypes.array,
+    playerID: React.PropTypes.string,
     activeUser: React.PropTypes.object,
     setActiveUser: React.PropTypes.func,
     removeUser: React.PropTypes.func,

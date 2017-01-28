@@ -4,10 +4,10 @@ export const addNewComment = (comment) => {
         payload: comment
     };
 };
-export const getComments = () => {
+export const getComments = (playerID) => {
     return {
         type: 'GET_COMMENTS',
-        payload: {}
+        payload: playerID
     };
 };
 export const syncComments = (comments) => {
@@ -16,9 +16,9 @@ export const syncComments = (comments) => {
         payload: { comments }
     };
 };
-export const postNewComment = (comment) => {
+export const postNewComment = (comment, playerID) => {
     return {
         type: 'POST_NEW_COMMENT',
-        payload: comment
+        payload: { comment, playerID }
     };
 };

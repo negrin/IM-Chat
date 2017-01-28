@@ -1,0 +1,37 @@
+$borderWidth: 5px;
+
+.craft-page {
+  height: 100vh;
+  background: $secondary-color;
+  display: flex;
+  align-items: center;
+
+  .craft-page-button-con {
+    margin: 0 auto;
+
+    .craft-page-button {
+      border: solid #026596;
+      border-width: 0 $borderWidth $borderWidth 0;
+      font-size: 30px;
+      color: #eeeeee;
+      border-radius: 6px;
+      height: 100px;
+      width: 270px;
+      background-color: $main-color;
+      cursor: pointer;
+      -webkit-box-shadow: 5px 5px 5px rgba(0,0,0,0.26);
+      -moz-box-shadow: 5px 5px 5px rgba(0,0,0,0.26);
+      box-shadow: 5px 5px 5px rgba(0,0,0,0.26);
+
+      &:hover {
+        color: #ffffff;
+        background-color: #0394dc;
+        border-width: $borderWidth 0 0 $borderWidth;
+        -webkit-box-shadow: 5px 5px 5px rgba(0,0,0,0);
+        -moz-box-shadow: 5px 5px 5px rgba(0,0,0,0);
+        box-shadow: 5px 5px 5px rgba(0,0,0,0);
+
+      }
+    }
+  }
+}

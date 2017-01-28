@@ -24,27 +24,27 @@ class Main extends React.Component {
     }
 
     subscribeFB() {
-        FirebaseAPI.onChange('child_added', 'comments', (e) => {
-            this.props.getComments();
+        FirebaseAPI.onChange('child_added', `players/${ this.props.params.playerID }/comments`, () => {
+            this.props.getComments(this.props.params.playerID);
         });
-        FirebaseAPI.onChange('child_removed', 'comments', (e) => {
-            this.props.getComments();
+        FirebaseAPI.onChange('child_removed', `players/${ this.props.params.playerID }/comments`, () => {
+            this.props.getComments(this.props.params.playerID);
         });
-        FirebaseAPI.onChange('child_added', 'users', (e) => {
-            this.props.getUsers();
+        FirebaseAPI.onChange('child_added', `players/${ this.props.params.playerID }/users`, () => {
+            this.props.getUsers(this.props.params.playerID);
         });
-        FirebaseAPI.onChange('child_removed', 'users', (e) => {
-            this.props.getUsers();
+        FirebaseAPI.onChange('child_removed', `players/${ this.props.params.playerID }/users`, () => {
+            this.props.getUsers(this.props.params.playerID);
         });
-        FirebaseAPI.onChange('child_changed', 'users', (e) => {
-            this.props.getUsers();
+        FirebaseAPI.onChange('child_changed', `players/${ this.props.params.playerID }/users`, () => {
+            this.props.getUsers(this.props.params.playerID);
         });
     }
 
     render() {
         return (
             <div>
-                <SingIn />
+                <SingIn playerID={ this.props.params.playerID }/>
                 <div className="chat">
                     <div className="chat-user-list">
                         { this.props.users.map((user) => {
@@ -59,7 +59,7 @@ class Main extends React.Component {
                             ) }
                         </div>
                         <div className="chat-new-message">
-                            <TextInput />
+                            <TextInput playerID={ this.props.params.playerID }/>
                         </div>
                     </div>
                 </div>
@@ -78,6 +78,7 @@ const mapStateToProps = (state) => {
 
 Main.propTypes = {
     comments: React.PropTypes.array,
+    params: React.PropTypes.object,
     users: React.PropTypes.array,
     getComments: React.PropTypes.func,
     getUsers: React.PropTypes.func
