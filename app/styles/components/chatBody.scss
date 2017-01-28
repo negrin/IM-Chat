@@ -6,6 +6,8 @@ $margin: 5px;
   .chat-user-list{
     background: $main-color;
     width: 300px;
+    overflow-y: auto;
+    overflow-x: hidden;
   }
   .chat-body{
     flex-grow: 5;

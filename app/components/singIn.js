@@ -18,6 +18,7 @@ class SingIn extends React.Component {
             this._handleSingOut();
         };
         window.addEventListener('keydown', this.keydownListener);
+        this.nameInput.focus();
     }
 
     componentWillUnmount() {
