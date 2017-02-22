@@ -14,7 +14,7 @@ class Player extends React.Component {
         this.state = {
             playerHeight: '',
             videoData: {},
-            videoDuration: {}
+            videoDuration: ''
         };
 
         this._resizeScreen = this._resizeScreen.bind(this);
@@ -76,35 +76,19 @@ class Player extends React.Component {
                 setTimeout(() => this.youtubeVideo.internalPlayer.playVideo());
                 break;
             case 'add':
-                let videoId = getUrlParamValue(commandParam, 'v');
-
-                if (this.youtubeVideo) {
-                    setTimeout(() => {
-                        this.youtubeVideo.internalPlayer.getPlayerState().then(
-                            (status) => {
-                                if (status === 0 || status === -1 || status === 2) {
-                                    this.props.selectNextVideo();
-                                }
-                            }
-                        );
-                        this.youtubeVideo.internalPlayer.getDuration().then(
-                            (videoDuration) => {
-                                const minutes =  Math.floor(videoDuration / 60);
-                                const seconds = (videoDuration - minutes * 60).toFixed(0);
-                                const finalTime = `${minutes}:${seconds}`;
-
-                                this.setState({ videoDuration: finalTime });
-                            }
-                        );
-                        this.youtubeVideo.internalPlayer.getVideoData().then(
-                            (videoData) => { this.setState({ videoData }); }
-                        );
-
-
-                    });
-                }
+                const videoId = getUrlParamValue(commandParam, 'v');
 
                 this.props.addVideo({ videoId, userName });
+
+                if (this.youtubeVideo) {
+                    this.youtubeVideo.internalPlayer.getPlayerState().then(
+                        (status) => {
+                            if (status === 0 || status === -1 || status === 2) {
+                                this.props.selectNextVideo();
+                            }
+                        }
+                    );
+                }
 
                 break;
             case 'next':
@@ -142,12 +126,35 @@ class Player extends React.Component {
         );
     }
 
-    _renderPlayer() {
-        const { videoId } = this.props.currentVideo;
+    _renderVideoDetails() {
+        const { videoData, videoDuration } = this.state;
 
-        if (!videoId) {
+        if (!videoData || !videoData.title) {
             return null;
         }
+
+        return (
+            <div className="video-data">
+                <span><b>Title:</b> { videoData.title } <b>Duration:</b> {videoDuration}</span>
+            </div>
+        );
+    }
+
+    extractVideoData(e) {
+        const internalPlayer = e.target;
+
+        const videoDuration = internalPlayer.getDuration()
+        const minutes =  Math.floor(videoDuration / 60);
+        const seconds = (videoDuration - minutes * 60).toFixed(0);
+        const finalTime = `${minutes}:${seconds}`;
+
+        const videoData = internalPlayer.getVideoData();
+
+        this.setState({ videoData, videoDuration: finalTime });
+    }
+
+    _renderPlayer() {
+        const { videoId } = this.props.currentVideo;
 
         return (
             <div className="youtube-holder"
@@ -156,8 +163,9 @@ class Player extends React.Component {
                 <YouTube
                     ref={ (video) => this.youtubeVideo = video }
                     videoId={ videoId }
-                    onReady={ this._onReady }
+                    onReady={ this._onReady.bind(this) }
                     onEnd={ this.props.selectNextVideo }
+                    onPlay={ this.extractVideoData.bind(this) }
                     className="youtube-player"/>
             </div>
         );
@@ -178,7 +186,7 @@ class Player extends React.Component {
                                 <img className="playlist-item-img" src={ `https://i.ytimg.com/vi/${ video.videoId }/hqdefault.jpg` } />
                                 <div className="playlist-item-info">
                                     <div>{ video.videoId }</div>
-                                    <div>4:15</div>
+                                    {/*<div>4:15</div>*/}
                                 </div>
                             </div>
                         );
@@ -189,7 +197,9 @@ class Player extends React.Component {
     }
 
     _onReady(event) {
-        event.target.playVideo();
+        if (this.state.videoId) {
+            event.target.playVideo();
+        }
     }
 
     render() {
@@ -199,6 +209,7 @@ class Player extends React.Component {
                 <div className="player-container">
                     { this._renderName() }
                     { this._renderPlayer() }
+                    { this._renderVideoDetails() }
                 </div>
             </div>
 
