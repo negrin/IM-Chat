@@ -4,6 +4,7 @@ import YouTube from 'react-youtube';
 import Gravatar from 'react-gravatar';
 import { addVideo, selectNextVideo } from '../reduxStore/actions/playerActions';
 import FirebaseAPI from '../firebase/firebase';
+import { getUrlParamValue } from '../helpers/urlHelpers';
 
 class Player extends React.Component {
 
@@ -75,12 +76,7 @@ class Player extends React.Component {
                 setTimeout(() => this.youtubeVideo.internalPlayer.playVideo());
                 break;
             case 'add':
-                let videoId = commandParam.split('v=')[1];
-                const ampersandPosition = videoId.indexOf('&');
-
-                if (ampersandPosition !== -1) {
-                    videoId = videoId.substring(0, ampersandPosition);
-                }
+                let videoId = getUrlParamValue(commandParam, 'v');
 
                 if (this.youtubeVideo) {
                     setTimeout(() => {

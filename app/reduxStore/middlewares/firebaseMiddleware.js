@@ -1,4 +1,3 @@
-import { connect } from 'react-redux';
 import { syncComments } from '../actions/commentActions';
 import { syncUsers } from '../actions/usersActions';
 import FirebaseAPI from '../../firebase/firebase';
