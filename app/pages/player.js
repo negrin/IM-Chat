@@ -65,15 +65,16 @@ class Player extends React.Component {
             case 'volume':
             case 'vol':
                 if (!isNaN(commandParam) && commandParam >= 0 && commandParam <= 100) {
-                    setTimeout(() => this.youtubeVideo.internalPlayer.setVolume(commandParam));
+                    this.youtubeVideo.internalPlayer.setVolume(commandParam);
+                    this.setState({ volume: commandParam });
                 }
                 break;
             case 'stop':
             case 'pause':
-                setTimeout(() => this.youtubeVideo.internalPlayer.pauseVideo());
+                this.youtubeVideo.internalPlayer.pauseVideo();
                 break;
             case 'play':
-                setTimeout(() => this.youtubeVideo.internalPlayer.playVideo());
+                this.youtubeVideo.internalPlayer.playVideo();
                 break;
             case 'add':
                 const videoId = getUrlParamValue(commandParam, 'v');
@@ -135,7 +136,8 @@ class Player extends React.Component {
 
         return (
             <div className="video-data">
-                <span><b>Title:</b> { videoData.title } <b>Duration:</b> {videoDuration}</span>
+                <p><b>Title: </b>{ videoData.title }</p>
+                <p><b>Duration: </b>{ videoDuration }</p>
             </div>
         );
     }
@@ -143,7 +145,7 @@ class Player extends React.Component {
     extractVideoData(e) {
         const internalPlayer = e.target;
 
-        const videoDuration = internalPlayer.getDuration()
+        const videoDuration = internalPlayer.getDuration();
         const minutes =  Math.floor(videoDuration / 60);
         const seconds = (videoDuration - minutes * 60).toFixed(0);
         const finalTime = `${minutes}:${seconds}`;
@@ -186,7 +188,7 @@ class Player extends React.Component {
                                 <img className="playlist-item-img" src={ `https://i.ytimg.com/vi/${ video.videoId }/hqdefault.jpg` } />
                                 <div className="playlist-item-info">
                                     <div>{ video.videoId }</div>
-                                    {/*<div>4:15</div>*/}
+                                    {/* <div>4:15</div> */}
                                 </div>
                             </div>
                         );
@@ -196,10 +198,22 @@ class Player extends React.Component {
         );
     }
 
+    _renderVolume() {
+        if (!this.youtubeVideo || !this.state.volume) {
+            return null;
+        }
+
+        return (
+            <div className="player-volume"><b>Vol </b>{ this.state.volume }</div>
+        );
+    }
+
     _onReady(event) {
         if (this.state.videoId) {
             event.target.playVideo();
         }
+
+        this.youtubeVideo.internalPlayer.getVolume().then((volume) => { this.setState({ volume }); });
     }
 
     render() {
@@ -207,6 +221,7 @@ class Player extends React.Component {
             <div className="player-page" >
                 { this._rendePlaylist() }
                 <div className="player-container">
+                    { this._renderVolume() }
                     { this._renderName() }
                     { this._renderPlayer() }
                     { this._renderVideoDetails() }

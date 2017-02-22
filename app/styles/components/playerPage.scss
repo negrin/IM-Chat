@@ -17,15 +17,15 @@
 
   .player-name {
     display: flex;
-    margin: 50px auto;
-    height: 50px;
+    margin: 20px auto;
+    min-height: 50px;
 
     .user-icon {
       border-radius: 5px;
+      margin-right: 10px;
     }
 
     span {
-      margin: 10px;
       font-size: 40px;
       color: $main-color;
     }
@@ -33,7 +33,10 @@
 
   .video-data {
     text-align: center;
-    padding: 10px 20px;
+
+    p {
+      margin: 5px;
+    }
   }
 
   .player-container {
@@ -79,5 +82,14 @@
     .selected {
       color: #fff;
     }
+  }
+
+  .player-volume {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+
+    color: #333;
+    font-size: 20px;
   }
 }
