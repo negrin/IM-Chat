@@ -1,6 +1,5 @@
 import { render } from 'react-dom';
 import { IndexRoute, Router, Route, browserHistory } from 'react-router';
-import Immutable from 'immutable';
 import Root from './layout/root';
 import Main from './pages/main';
 import Craft from './pages/craft';
