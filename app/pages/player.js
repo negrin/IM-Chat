@@ -92,7 +92,13 @@ class Player extends React.Component {
                             }
                         );
                         this.youtubeVideo.internalPlayer.getDuration().then(
-                            (videoDuration) => { this.setState({ videoDuration }); }
+                            (videoDuration) => {
+                                const minutes =  Math.floor(videoDuration / 60);
+                                const seconds = (videoDuration - minutes * 60).toFixed(0);
+                                const finalTime = `${minutes}:${seconds}`;
+
+                                this.setState({ videoDuration: finalTime });
+                            }
                         );
                         this.youtubeVideo.internalPlayer.getVideoData().then(
                             (videoData) => { this.setState({ videoData }); }
