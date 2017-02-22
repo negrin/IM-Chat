@@ -20,10 +20,14 @@
     margin: 50px auto;
     height: 50px;
 
+    .user-icon {
+      border-radius: 5px;
+    }
+
     span {
       margin: 10px;
       font-size: 40px;
-      color: #ffffff;
+      color: $main-color;
     }
   }
 
@@ -41,10 +45,34 @@
     background: $main-color;
     right-border: 1px soilid #fff;
 
-    .selected {
-      margin: 5px 5px;
-      color: #fff;
+    .playlistItem {
+      display: flex;
       font-weight: bold;
+      margin: 5px 5px;
+
+      .playlist-item-img{
+        width: 100px;
+        height: 60px;
+        margin-right: 5px;
+        border: 1px solid $secondary-color;
+        //border-radius: 3px;
+      }
+
+      .playlist-item-info {
+        display: flex;
+        flex-direction: column;
+
+        div {
+          flex: 1;
+          overflow-x: hidden;
+          white-space: nowrap;
+          text-overflow: ellipsis;
+        }
+      }
+    }
+
+    .selected {
+      color: #fff;
     }
   }
 }

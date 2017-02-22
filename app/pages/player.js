@@ -11,7 +11,9 @@ class Player extends React.Component {
         super();
 
         this.state = {
-            playerHeight: ''
+            playerHeight: '',
+            videoData: {},
+            videoDuration: {}
         };
 
         this._resizeScreen = this._resizeScreen.bind(this);
@@ -80,6 +82,26 @@ class Player extends React.Component {
                     videoId = videoId.substring(0, ampersandPosition);
                 }
 
+                if (this.youtubeVideo) {
+                    setTimeout(() => {
+                        this.youtubeVideo.internalPlayer.getPlayerState().then(
+                            (status) => {
+                                if (status === 0 || status === -1 || status === 2) {
+                                    this.props.selectNextVideo();
+                                }
+                            }
+                        );
+                        this.youtubeVideo.internalPlayer.getDuration().then(
+                            (videoDuration) => { this.setState({ videoDuration }); }
+                        );
+                        this.youtubeVideo.internalPlayer.getVideoData().then(
+                            (videoData) => { this.setState({ videoData }); }
+                        );
+
+
+                    });
+                }
+
                 this.props.addVideo({ videoId, userName });
 
                 break;
@@ -90,6 +112,7 @@ class Player extends React.Component {
             default:
                 break;
         }
+
     }
 
     _resizeScreen() {
@@ -144,11 +167,18 @@ class Player extends React.Component {
                 {
                     this.props.playlist.map((video) => {
                         const videoClassName = cx({
+                            playlistItem: true,
                             selected: video.videoId === this.props.currentVideo.videoId
                         });
 
                         return (
-                            <div className={ videoClassName }>{ video.videoId }</div>
+                            <div className={ videoClassName }>
+                                <img className="playlist-item-img" src={ `https://i.ytimg.com/vi/${ video.videoId }/hqdefault.jpg` } />
+                                <div className="playlist-item-info">
+                                    <div>{ video.videoId }</div>
+                                    <div>4:15</div>
+                                </div>
+                            </div>
                         );
                     })
                 }
@@ -158,7 +188,6 @@ class Player extends React.Component {
 
     _onReady(event) {
         event.target.playVideo();
-        setTimeout(() => this._resizeScreen());
     }
 
     render() {
