@@ -14,7 +14,8 @@ class Player extends React.Component {
         this.state = {
             playerHeight: '',
             videoData: {},
-            videoDuration: ''
+            videoDuration: '',
+            videoUId: 0
         };
 
         this._resizeScreen = this._resizeScreen.bind(this);
@@ -32,6 +33,9 @@ class Player extends React.Component {
 
         if (currentVideo.videoId !== prevVideo.videoId) {
             setTimeout(() => this.youtubeVideo.internalPlayer.playVideo());
+            const playlistItem = this[`playlistItem${currentVideo.videoUId}`];
+
+            this.playlistDiv.scrollTop = playlistItem.offsetTop - 10;
         }
     }
 
@@ -77,9 +81,11 @@ class Player extends React.Component {
                 this.youtubeVideo.internalPlayer.playVideo();
                 break;
             case 'add':
+                this.setState({ videoUId: this.state.videoUId + 1 });
+                const videoUId = this.state.videoUId;
                 const videoId = getUrlParamValue(commandParam, 'v');
 
-                this.props.addVideo({ videoId, userName });
+                this.props.addVideo({ videoId, userName, videoUId });
 
                 if (this.youtubeVideo) {
                     this.youtubeVideo.internalPlayer.getPlayerState().then(
@@ -173,18 +179,20 @@ class Player extends React.Component {
         );
     }
 
-    _rendePlaylist() {
+    _renderPlaylist() {
+        const { currentVideo, playlist } = this.props;
+
         return (
-            <div className="playlist-panel">
+            <div className="playlist-panel" ref={ (playlistDiv) => this.playlistDiv = playlistDiv }>
                 {
-                    this.props.playlist.map((video) => {
+                    playlist.map((video) => {
                         const videoClassName = cx({
                             playlistItem: true,
-                            selected: video.videoId === this.props.currentVideo.videoId
+                            selected: video.videoUId === currentVideo.videoUId
                         });
 
                         return (
-                            <div className={ videoClassName }>
+                            <div className={ videoClassName } ref={ (div) => this[`playlistItem${video.videoUId}`] = div }>
                                 <img className="playlist-item-img" src={ `https://i.ytimg.com/vi/${ video.videoId }/hqdefault.jpg` } />
                                 <div className="playlist-item-info">
                                     <div>{ video.videoId }</div>
@@ -219,7 +227,7 @@ class Player extends React.Component {
     render() {
         return (
             <div className="player-page" >
-                { this._rendePlaylist() }
+                { this._renderPlaylist() }
                 <div className="player-container">
                     { this._renderVolume() }
                     { this._renderName() }
