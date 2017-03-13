@@ -34,10 +34,14 @@ class SingIn extends React.Component {
     _handleSingIn() {
         if (/\S/.test(this.nameInput.value)) {
             const randomID = Math.floor((Math.random() * 30000) + 1);
+            const name = this.nameInput.value;
+            const email = this.emailInput && this.emailInput.value !== '' ? this.emailInput.value : name;
 
-            this.props.setActiveUser(this.nameInput.value, randomID);
+            this.props.setActiveUser(name, email, randomID);
+
             const newUser = {
-                name: this.nameInput.value,
+                name,
+                email,
                 userID: randomID,
                 isTyping: false
             };
@@ -68,8 +72,6 @@ class SingIn extends React.Component {
     }
 
     render() {
-        this.pageHeight = document.body.clientHeight;
-        this.pageWidth = document.body.clientWidth;
         return (
         <div className="singing-overlay"
              style={ this.state.isSingInOver ? { display: 'none' }
@@ -79,6 +81,12 @@ class SingIn extends React.Component {
                         type="text"
                         ref={ (instance) => { this.nameInput = instance; } }
                         placeholder="Name"
+                        onChange={ () => this._handleButtonColor() }
+                        className="sing-in-text"/>
+                    <input
+                        type="text"
+                        ref={ (instance) => { this.emailInput = instance; } }
+                        placeholder="E-mail"
                         onChange={ () => this._handleButtonColor() }
                         className="sing-in-text"/>
                     <button

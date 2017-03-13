@@ -16,10 +16,10 @@ export const postNewUser = (user, playerID) => {
         payload: { user, playerID }
     };
 };
-export const setActiveUser = (name, id) => {
+export const setActiveUser = (name, email, id) => {
     return {
         type: 'SET_ACTIVE_USER',
-        payload: { name, id }
+        payload: { name, email, id }
     };
 };
 export const removeUser = (id, playerID) => {

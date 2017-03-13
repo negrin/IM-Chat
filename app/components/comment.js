@@ -23,7 +23,7 @@ class Commment extends React.Component {
                 <div className="comment-info">
                     <Gravatar
                         className="comment-user-icon"
-                        email={ this.props.comment.name } />
+                        email={ this.props.comment.email } />
                     <div className="comment-date">
                         { this.props.comment.date }
                     </div>

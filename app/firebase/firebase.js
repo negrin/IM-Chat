@@ -21,13 +21,11 @@ class FirebaseAPI {
     // ************************************************
     add(path, payload) {
         this.firebase.database().ref(path).set(payload).then((e) => {
-            console.log(e);
         });
     }
 
     push(path, payload, callback) {
         this.firebase.database().ref(path).push(payload).then(function(e) {
-            console.log('success', e);
         }, function(error) {
             console.log(error);
         });
@@ -50,14 +48,12 @@ class FirebaseAPI {
 
     remove(path) {
         this.firebase.database().ref(path).remove().then((e) => {
-            console.log(e);
         });
     }
 
     getData(location, callback) {
         this.firebase.database().ref(location).once('value').then((snapshot) => {
             callback(snapshot.val());
-            console.log();
         });
     }
 

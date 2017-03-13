@@ -64,6 +64,7 @@ class Player extends React.Component {
         const command = e.text.substr(1).split(' ')[0];
         const commandParam = e.text.substr(1).split(' ')[1];
         const userName = e.name;
+        const email = e.email;
 
         switch (command) {
             case 'volume':
@@ -85,7 +86,7 @@ class Player extends React.Component {
                 const videoUId = this.state.videoUId;
                 const videoId = getUrlParamValue(commandParam, 'v');
 
-                this.props.addVideo({ videoId, userName, videoUId });
+                this.props.addVideo({ videoId, userName, email, videoUId });
 
                 if (this.youtubeVideo) {
                     this.youtubeVideo.internalPlayer.getPlayerState().then(
@@ -96,11 +97,9 @@ class Player extends React.Component {
                         }
                     );
                 }
-
                 break;
             case 'next':
                 this.props.selectNextVideo();
-
                 break;
             default:
                 break;
@@ -117,7 +116,8 @@ class Player extends React.Component {
     }
 
     _renderName() {
-        const { userName } = this.props.currentVideo;
+        console.log('currentVideo:', this.props.currentVideo);
+        const { userName, email } = this.props.currentVideo;
 
         if (!userName) {
             return null;
@@ -127,7 +127,7 @@ class Player extends React.Component {
             <div className="player-name">
                 <Gravatar
                     className="user-icon"
-                    email={ userName } />
+                    email={ email } />
                 <span>{ userName }:</span>
             </div>
         );

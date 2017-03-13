@@ -42,6 +42,7 @@ class TextInput extends React.Component {
         if (/\S/.test(this.textInput.value)) {
             const newComment = {
                 name: this.props.activeUser.name,
+                email: this.props.activeUser.email,
                 date: this._getCurrentDate(),
                 text: this.textInput.value
             };
