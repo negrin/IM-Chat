@@ -15,7 +15,8 @@ class Player extends React.Component {
             playerHeight: '',
             videoData: {},
             videoDuration: '',
-            videoUId: 0
+            videoUId: 0,
+            isFullScreen: false
         };
 
         this._resizeScreen = this._resizeScreen.bind(this);
@@ -81,6 +82,9 @@ class Player extends React.Component {
             case 'play':
                 this.youtubeVideo.internalPlayer.playVideo();
                 break;
+            case 'full':
+                this.setState({ isFullScreen: !this.state.isFullScreen });
+                break;
             case 'add':
                 this.setState({ videoUId: this.state.videoUId + 1 });
                 const videoUId = this.state.videoUId;
@@ -116,7 +120,6 @@ class Player extends React.Component {
     }
 
     _renderName() {
-        console.log('currentVideo:', this.props.currentVideo);
         const { userName, email } = this.props.currentVideo;
 
         if (!userName) {
@@ -163,9 +166,13 @@ class Player extends React.Component {
 
     _renderPlayer() {
         const { videoId } = this.props.currentVideo;
+        const holderClassName = cx({
+            'youtube-holder': true,
+            'youtube-holder__full-screen': this.state.isFullScreen
+        });
 
         return (
-            <div className="youtube-holder"
+            <div className={ holderClassName }
                  style={ { height: this.state.playerHeight } }
                  ref={ (div) => this.youtubePlaceHolder = div }>
                 <YouTube
