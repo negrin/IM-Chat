@@ -22,13 +22,14 @@ export default function (state = initialState, action = {}) {
 
         case 'UPDATE_VIDEO_INFO': {
             const playlist2 = state.toJS().playlist;
+            const currentPlayedIndex = state.toJS().currentPlayedIndex;
             const playlistID = playlist2.findIndex((video) => video.videoUId === action.payload.videoUId);
             const timeArray = action.payload.videoDuration.match(/(\d+)/g);
             const duration = timeArray.join(':');
 
             playlist2[playlistID].videoName = action.payload.videoName;
             playlist2[playlistID].videoDuration = duration;
-            return Immutable.fromJS({ playlist: playlist2 });
+            return Immutable.fromJS({ playlist: playlist2, currentPlayedIndex });
         }
 
         case 'GET_PLAYER_ID': {
