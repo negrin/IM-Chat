@@ -2,7 +2,7 @@ import { connect } from 'react-redux';
 import cx from 'classnames';
 import YouTube from 'react-youtube';
 import Gravatar from 'react-gravatar';
-import { addVideo, selectNextVideo } from '../reduxStore/actions/playerActions';
+import { addVideo, updateVideoInfo, selectNextVideo } from '../reduxStore/actions/playerActions';
 import FirebaseAPI from '../firebase/firebase';
 import { getUrlParamValue } from '../helpers/urlHelpers';
 
@@ -20,6 +20,7 @@ class Player extends React.Component {
         };
 
         this._resizeScreen = this._resizeScreen.bind(this);
+        this._getVideoInfo = this._getVideoInfo.bind(this);
     }
 
     componentDidMount() {
@@ -91,6 +92,7 @@ class Player extends React.Component {
                 const videoId = getUrlParamValue(commandParam, 'v');
 
                 this.props.addVideo({ videoId, userName, email, videoUId });
+                this._getVideoInfo(videoId, videoUId);
 
                 if (this.youtubeVideo) {
                     this.youtubeVideo.internalPlayer.getPlayerState().then(
@@ -109,6 +111,19 @@ class Player extends React.Component {
                 break;
         }
 
+    }
+
+    _getVideoInfo(videoId, videoUId) {
+        const xhr = new XMLHttpRequest();
+
+        xhr.open('GET', `https://www.googleapis.com/youtube/v3/videos?part=contentDetails%2C+snippet&id=${ videoId }&key=AIzaSyBYHPYcobof9p6rApxR4mIRQkj-2NdR2to`, false);
+        xhr.send();
+
+        const youtubeInfo = JSON.parse(xhr.response);
+
+        if (youtubeInfo) {
+            this.props.updateVideoInfo(youtubeInfo.items[0].snippet.title, youtubeInfo.items[0].contentDetails.duration, videoUId);
+        }
     }
 
     _resizeScreen() {
@@ -137,17 +152,17 @@ class Player extends React.Component {
     }
 
     _renderVideoDetails() {
-        const { videoData, videoDuration } = this.state;
+        const { currentVideo, playlist } = this.props;
 
-        if (!videoData || !videoData.title) {
+        if (!currentVideo || !playlist) {
             return null;
         }
 
         return (
-            <div className="video-data">
-                <p><b>Title: </b>{ videoData.title }</p>
-                <p><b>Duration: </b>{ videoDuration }</p>
-            </div>
+          <div className="video-data">
+              <p><b>Title: </b>{ currentVideo.videoName ? currentVideo.videoName : '....' }</p>
+              <p><b>Duration: </b>{ currentVideo.videoDuration ? currentVideo.videoDuration : '00:00:00' }</p>
+          </div>
         );
     }
 
@@ -200,13 +215,14 @@ class Player extends React.Component {
 
                         return (
                             <div className={ videoClassName } ref={ (div) => this[`playlistItem${video.videoUId}`] = div }>
-                                <img className="playlist-item-img" src={ `https://i.ytimg.com/vi/${ video.videoId }/hqdefault.jpg` } />
-                                <div className="playlist-item-info">
-                                    <div>{ video.videoId }</div>
-                                    {/* <div>4:15</div> */}
-                                </div>
-                            </div>
-                        );
+                                  <img className="playlist-item-img" src={ `https://i.ytimg.com/vi/${ video.videoId }/hqdefault.jpg` } />
+                                  <div className="playlist-item-info">
+                                      <div>{ video.videoName }</div>
+                                      <div>{ video.videoDuration }</div>
+                                      <div>by: { video.userName }</div>
+                                  </div>
+                              </div>
+                          );
                     })
                 }
             </div>
@@ -259,7 +275,8 @@ Player.propTypes = {
     params: React.PropTypes.object.isRequired,
     playlist: React.PropTypes.array.isRequired,
     addVideo: React.PropTypes.func.isRequired,
+    updateVideoInfo: React.PropTypes.func.isRequired,
     selectNextVideo: React.PropTypes.func.isRequired
 };
 
-export default connect(mapStateToProps, { addVideo, selectNextVideo })(Player);
+export default connect(mapStateToProps, { addVideo, selectNextVideo, updateVideoInfo })(Player);
