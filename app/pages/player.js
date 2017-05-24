@@ -124,34 +124,39 @@ class Player extends React.Component {
         }
     }
 
-    _renderName() {
-        const { userName, email } = this.props.currentVideo;
-
-        if (!userName) {
-            return null;
-        }
-
-        return (
-            <div className="player-name">
-                <Gravatar
-                    className="user-icon"
-                    email={ email } />
-                <span>{ userName }:</span>
-            </div>
-        );
-    }
-
     _renderVideoDetails() {
+
         const { currentVideo, playlist } = this.props;
+        const { userName, email } = currentVideo;
 
         if (!currentVideo || !playlist) {
             return null;
         }
 
+        const playerData = cx({
+            'player-data': true,
+            'player-data__full-screen': this.state.isFullScreen
+        });
+
         return (
-          <div className="video-data">
-              <p><b>Title: </b>{ currentVideo.videoName ? currentVideo.videoName : '....' }</p>
-              <p><b>Duration: </b>{ currentVideo.videoDuration ? currentVideo.videoDuration : '00:00:00' }</p>
+          <div className={ playerData }>
+              <div className="player-data-name">
+                  <Gravatar
+                      className="player-data-name-icon"
+                      email={ email ? email : '' } />
+              </div>
+              <div className="player-data-info">
+                  <div className="player-data-text-large">{ userName ? `${userName}:` : '....' }</div>
+                  <div className="player-data-text"><b>Title:</b> { currentVideo.videoName ? currentVideo.videoName : '....' }</div>
+                  <div className="player-data-aliment">
+                      <div className="player-data-text">
+                          <b>Duration:</b> { currentVideo.videoDuration ? currentVideo.videoDuration : '00:00:00' }
+                          </div>
+                      <div className="player-data-text">
+                          <b>Volume:</b> { this.youtubeVideo || this.state.volume ? this.state.volume : '....' }
+                          </div>
+                  </div>
+              </div>
           </div>
         );
     }
@@ -219,16 +224,6 @@ class Player extends React.Component {
         );
     }
 
-    _renderVolume() {
-        if (!this.youtubeVideo || !this.state.volume) {
-            return null;
-        }
-
-        return (
-            <div className="player-volume"><b>Vol </b>{ this.state.volume }</div>
-        );
-    }
-
     _onReady(event) {
         if (this.state.videoId) {
             event.target.playVideo();
@@ -242,10 +237,8 @@ class Player extends React.Component {
             <div className="player-page" >
                 { this._renderPlaylist() }
                 <div className="player-container">
-                    { this._renderVolume() }
-                    { this._renderName() }
-                    { this._renderPlayer() }
                     { this._renderVideoDetails() }
+                    { this._renderPlayer() }
                 </div>
             </div>
 
@@ -266,7 +259,7 @@ Player.propTypes = {
     playlist: React.PropTypes.array.isRequired,
     addVideo: React.PropTypes.func.isRequired,
     updateVideoInfo: React.PropTypes.func.isRequired,
-    selectNextVideo: React.PropTypes.func.isRequired
+    selectNextVideo: React.PropTypes.func.isRequired,
 };
 
 export default connect(mapStateToProps, { addVideo, selectNextVideo, updateVideoInfo })(Player);

@@ -1,3 +1,5 @@
+$player-offset: 120px;
+
 .player-page {
   width: 100%;
   height: 100vh;
@@ -6,8 +8,8 @@
 
   .youtube-holder {
     margin: 0 auto;
-    width: 70%;
-    height: 70%;
+    width: 90%;
+    height: 90%;
 
     .youtube-player {
       width: 100%;
@@ -16,39 +18,72 @@
   }
 
   .youtube-holder__full-screen {
-    height: 100vh !important;
+    height: calc(100vh) !important;
     width: 100%;
     position: fixed;
     top: 0;
     left: 0;
   }
 
-  .player-name {
-    display: flex;
-    margin: 20px auto;
-    min-height: 50px;
+  .player-data__full-screen {
+    width: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 5;
+    background-color: rgba($main-color, 0.5);
+    padding: 10px !important;
 
-    .user-icon {
-      border-radius: 5px;
-      margin-right: 10px;
+
+    .player-data-text {
+      color: $userNameColor !important;
     }
 
-    span {
-      font-size: 40px;
-      color: $main-color;
+    .player-data-text-large {
+      color: $userNameColor !important;
     }
   }
 
-  .video-data {
-    text-align: center;
+  .player-data {
+    display: flex;
+    padding: 20px;
 
-    p {
-      margin: 5px;
+    .player-data-name {
+      display: flex;
+      flex-direction: column;
+
+      .player-data-name-icon {
+        height: 80px;
+        width: 80px;
+        border-radius: 5px;
+        margin-right: 10px;
+      }
+    }
+
+    .player-data-info {
+      width: 100%;
+
+      .player-data-text-large {
+        font-size: 20px;
+        font-weight: bold;
+        color: $main-color;
+      }
+
+      .player-data-text {
+        margin-right: 10px;
+        color: #333;
+        font-size: 20px;
+      }
+
+      .player-data-aliment {
+        display: flex;
+      }
     }
   }
 
   .player-container {
     display: flex;
+    align-items: center;
     flex-direction: column;
     flex: 1;
   }
@@ -88,14 +123,5 @@
     .selected {
       color: #fff;
     }
-  }
-
-  .player-volume {
-    position: absolute;
-    top: 20px;
-    right: 20px;
-
-    color: #333;
-    font-size: 20px;
   }
 }
