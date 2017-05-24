@@ -5,6 +5,7 @@ import Gravatar from 'react-gravatar';
 import { addVideo, updateVideoInfo, selectNextVideo } from '../reduxStore/actions/playerActions';
 import FirebaseAPI from '../firebase/firebase';
 import { getUrlParamValue } from '../helpers/urlHelpers';
+import { getCommentCommand, getCommentCommandParam } from '../helpers/commentHelpers';
 
 class Player extends React.Component {
 
@@ -52,8 +53,8 @@ class Player extends React.Component {
     }
 
     _parseCommand(e) {
-        const command = e.text.substr(1).split(' ')[0];
-        const commandParam = e.text.substr(1).split(' ')[1];
+        const command = getCommentCommand(e);
+        const commandParam = getCommentCommandParam(e);
         const userName = e.name;
         const email = e.email;
 

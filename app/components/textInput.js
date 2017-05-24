@@ -1,4 +1,5 @@
 import { connect } from 'react-redux';
+import moment from 'moment';
 import { postNewComment } from '../reduxStore/actions/commentActions';
 import { isTyping } from '../reduxStore/actions/usersActions';
 
@@ -30,22 +31,17 @@ class TextInput extends React.Component {
         }
     }
 
-    _getCurrentDate() {
-        const newDate = new Date();
-        const hours = newDate.getHours();
-        const minutes = newDate.getMinutes();
-
-        return (`${ hours }:${ minutes.toString().length === 1 ? '0' : '' }${ minutes }`);
-    }
-
     _handleSendNewComment() {
         if (/\S/.test(this.textInput.value)) {
+            const now = Date.now();
+            const momentNow = moment(now);
             const newComment = {
                 name: this.props.activeUser.name,
                 email: this.props.activeUser.email,
-                date: this._getCurrentDate(),
+                date: momentNow.format('YYYY/MM/DD'),
+                time: momentNow.format('HH:mm:ss'),
                 text: this.textInput.value,
-                created: Date.now()
+                created: now
             };
 
             this._handleIsTyping(false);

@@ -1,13 +1,23 @@
 import Immutable from 'immutable';
+import { getCommentCommand } from '../../helpers/commentHelpers';
 
 const comments = Immutable.fromJS([]);
 
 const buildList = (ob) => {
     const list = [];
+    let prevComment;
 
     for (const key in ob) {
-        if (ob[key]) {
-            list.push(Object.assign({}, ob[key], { id: key }));
+        if (ob.hasOwnProperty(key)) {
+            const command = getCommentCommand(ob[key]);
+            const comment = Object.assign({}, ob[key], { id: key, command });
+
+            if (!prevComment || (prevComment.date !== comment.date)) {
+                list.push({ command: 'newDate', date: comment.date });
+            }
+
+            list.push(comment);
+            prevComment = comment;
         }
     }
 

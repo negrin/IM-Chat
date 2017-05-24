@@ -1,6 +1,6 @@
 import Gravatar from 'react-gravatar';
 
-class Commment extends React.Component {
+class Comment extends React.Component {
 
     _handleBRintext() {
         const text = this.props.comment.text;
@@ -25,11 +25,11 @@ class Commment extends React.Component {
                         className="comment-user-icon"
                         email={ this.props.comment.email } />
                     <div className="comment-date">
-                        { this.props.comment.date }
+                        { this.props.comment.time }
                     </div>
 
                 </div>
-                <div className="arrow-left"></div>
+                <div className="arrow-left"/>
                 <div className="comment-body">
                     <div className="comment-username">
                         { this.props.comment.name }
@@ -43,8 +43,8 @@ class Commment extends React.Component {
     }
 }
 
-Commment.propTypes = {
+Comment.propTypes = {
     comment: React.PropTypes.object
 };
 
-export default Commment;
+export default Comment;

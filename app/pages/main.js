@@ -1,5 +1,6 @@
 import { connect } from 'react-redux';
-import Commment from '../components/comment';
+import Comment from '../components/comment';
+import DateMarker from '../components/dateMarker';
 import User from '../components/user';
 import TextInput from '../components/textInput';
 import SingIn from '../components/singIn';
@@ -43,6 +44,13 @@ class Main extends React.Component {
         });
     }
 
+    renderComment(comment) {
+        if (comment.command === 'newDate') {
+            return <DateMarker key={ comment.date } date={ comment.date }/>;
+        }
+        return <Comment key={ comment.id } comment={ comment }/>;
+    }
+
     render() {
         return (
             <div>
@@ -56,7 +64,7 @@ class Main extends React.Component {
                     <div className="chat-body">
                         <div ref={ (instance) => { this.massageDiv = instance; } } className="chat-messages">
                             { this.props.comments.map((comment) => {
-                                return <Commment key={ comment.id } comment={ comment }/>;
+                                return this.renderComment(comment);
                             }
                             ) }
                         </div>
