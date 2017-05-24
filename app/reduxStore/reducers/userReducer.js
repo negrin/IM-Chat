@@ -2,14 +2,8 @@ import Immutable from 'immutable';
 
 const comments = Immutable.fromJS([]);
 
-const buildList = (ob) => {
-    const list = [];
-
-    for (const key in ob) {
-        if (ob[key]) {
-            list.push(Object.assign({}, ob[key], { id: key }));
-        }
-    }
+const buildList = (data) => {
+    const list = data.slice();
 
     return list;
 };

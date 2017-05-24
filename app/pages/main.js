@@ -52,11 +52,30 @@ class Main extends React.Component {
         });
     }
 
+    renderCommentsList() {
+        const comments = this.props.comments;
+        const rendered = [];
+        let prevComment;
+
+        comments.forEach((comment) => {
+            if (!prevComment || (prevComment.date !== comment.date)) {
+                rendered.push(this.renderDateMarker(comment.date));
+            }
+            if (comment.commandType === CommandType.ADD) {
+                rendered.push(this.renderComment(comment));
+                prevComment = comment;
+            }
+        });
+
+        return rendered;
+    }
+
     renderComment(comment) {
-        if (comment.command === 'newDate') {
-            return <DateMarker key={ comment.date } date={ comment.date }/>;
-        }
         return <Comment key={ comment.id } comment={ comment }/>;
+    }
+
+    renderDateMarker(date) {
+        return <DateMarker key={ date } date={ date }/>;
     }
 
     render() {
@@ -75,12 +94,7 @@ class Main extends React.Component {
                     </div>
                     <div className="chat-body">
                         <div ref={ (instance) => { this.massageDiv = instance; } } className="chat-messages">
-                            { this.props.comments.map((comment) => {
-                                if (comment.commandType === CommandType.ADD) {
-                                    return this.renderComment(comment);
-                                }
-                            }
-                            ) }
+                            { this.renderCommentsList() }
                         </div>
                         <div className="chat-new-message">
                             <TextInput playerID={ this.props.params.playerID }/>

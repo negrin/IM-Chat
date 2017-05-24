@@ -11,7 +11,7 @@ export default function firebaseMiddleware({ getState, dispatch }) {
                     dispatch(syncComments(e));
                 };
 
-                FirebaseAPI.getData(`players/${ action.payload }/comments`, getCommentsFromFB);
+                FirebaseAPI.getList(`players/${ action.payload }/comments`, getCommentsFromFB);
                 break;
             case 'POST_NEW_COMMENT':
                 FirebaseAPI.push(`players/${ action.payload.playerID }/comments`, action.payload.comment);
@@ -40,7 +40,7 @@ export default function firebaseMiddleware({ getState, dispatch }) {
                     dispatch(syncUsers(e));
                 };
 
-                FirebaseAPI.getData(`players/${ action.payload }/users`, getUsersFromFB);
+                FirebaseAPI.getList(`players/${ action.payload }/users`, getUsersFromFB);
                 break;
             default:
                 break;

@@ -58,11 +58,27 @@ class FirebaseAPI {
         });
     }
 
-    getData(location, callback) {
+    getData(location, callback, snapshotToDataFunc) {
+        snapshotToDataFunc = snapshotToDataFunc || ((s) => s.val());
         this.firebase.database().ref(location).once('value').then((snapshot) => {
-            callback(snapshot.val());
+            callback(snapshotToDataFunc(snapshot));
         });
     }
+
+    getList(location, callback, options = { inlineKey: 'id', childSnapshotToDataFunc: undefined }) {
+        const snapshotToDataFunc = options.childSnapshotToDataFunc || ((s) => s.val());
+        const snapshotToList = (snapshot) => {
+            let list;
+            list = [];
+            snapshot.forEach((childSnapshot) => {
+                const childObj = snapshotToDataFunc(childSnapshot);
+                childObj[options.inlineKey] = childSnapshot.key;
+                list.push(childObj)
+            });
+            return list;
+        };
+        return this.getData(location, callback, snapshotToList)
+     }
 
     onAdd(ref, callback) {
         const dataRef = firebase.database().ref(ref);
