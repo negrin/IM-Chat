@@ -44,7 +44,8 @@ class TextInput extends React.Component {
                 name: this.props.activeUser.name,
                 email: this.props.activeUser.email,
                 date: this._getCurrentDate(),
-                text: this.textInput.value
+                text: this.textInput.value,
+                created: Date.now()
             };
 
             this._handleIsTyping(false);
@@ -81,7 +82,7 @@ class TextInput extends React.Component {
                 <textarea
                     className="text-box"
                     onChange={ () => this._handleButtonColor() }
-                    placeholder="Type your massage..."
+                    placeholder="Type your message..."
                     ref={ (instance) => { this.textInput = instance; } }/>
                 <button className="btn"
                         style={ this.state.isTextBoxEmpty ? { background: '#a3a3a3', cursor: 'default' } : null }

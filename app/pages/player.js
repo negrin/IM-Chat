@@ -46,19 +46,8 @@ class Player extends React.Component {
     }
 
     subscribeFB() {
-        FirebaseAPI.onChange('child_added', `players/${ this.props.params.playerID }/comments`, (e) => {
-            // TODO - temp solution for not handling precious (existing) comments
-            const now = new Date();
-            let minutes = now.getMinutes();
-
-            if (minutes.toString().length === 1) {
-                minutes = `0${minutes}`;
-            }
-            const currentTime = `${now.getHours()}:${minutes}`;
-
-            if (e.text && e.text[0] === '/' && currentTime === e.date) {
-                this._parseCommand(e);
-            }
+        FirebaseAPI.onNewChange('child_added', `players/${ this.props.params.playerID }/comments`, (e) => {
+            this._parseCommand(e);
         });
     }
 
