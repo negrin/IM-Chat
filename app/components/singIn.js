@@ -92,7 +92,7 @@ class SingIn extends React.Component {
                     <button
                         className="sing-in-btn"
                         style={ this.state.isNameInputEmpty ? { background: '#a3a3a3', color: '#C1C1C1', cursor: 'default' } : null }
-                        onClick={ () => this._handleSingIn() }>SIGNIN
+                        onClick={ () => this._handleSingIn() }>Sign In
                     </button>
             </div>
         </div>
