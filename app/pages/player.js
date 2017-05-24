@@ -143,7 +143,7 @@ class Player extends React.Component {
               <div className="player-data-name">
                   <Gravatar
                       className="player-data-name-icon"
-                      email={ email ? email : '' } />
+                      email={ email ? email : 'fdg' } />
               </div>
               <div className="player-data-info">
                   <div className="player-data-text-large">{ userName ? `${userName}:` : '....' }</div>
