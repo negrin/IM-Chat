@@ -44,7 +44,8 @@ class TextInput extends React.Component {
                 name: this.props.activeUser.name,
                 email: this.props.activeUser.email,
                 date: this._getCurrentDate(),
-                text: this.textInput.value
+                text: this.textInput.value,
+                created: Date.now()
             };
 
             this._handleIsTyping(false);

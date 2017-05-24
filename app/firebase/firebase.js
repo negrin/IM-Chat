@@ -38,6 +38,13 @@ class FirebaseAPI {
         });
     }
 
+    onNewChange(type, path, callback) {
+        this.firebase.database().ref(path).orderByChild('created').startAt(Date.now()).on(type, function(childSnapshot, prevChildName) {
+            // do something with the child
+            callback(childSnapshot.val());
+        });
+    }
+
     update() {
 
     }
