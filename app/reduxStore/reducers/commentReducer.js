@@ -1,28 +1,33 @@
 import Immutable from 'immutable';
 import { getCommentCommand } from '../../helpers/commentHelpers';
 
-const comments = Immutable.fromJS([]);
+const initialComments = Immutable.fromJS([]);
 
-const buildList = (data) => {
-    const list = [];
+const buildComment = (data) => {
+    const command = getCommentCommand(data);
 
-    data.forEach((v) => {
-        const command = getCommentCommand(v);
-        const comment = Object.assign({}, v, { command });
-
-        list.push(comment);
-    });
-
-    return list;
+    return Object.assign({}, data, { command });
 };
 
-export default function (state = comments, action = {}) {
+const buildList = (data) => {
+    return data.map((v) => buildComment);
+};
+
+export default function (state = initialComments, action = {}) {
 
     switch (action.type) {
-        case 'ADD_NEW_COMMENT':
-            return state.push(Immutable.fromJS(action.payload));
+        case 'ADD_COMMENT':
+            const comment = action.payload;
+
+            return state.push(Immutable.fromJS(buildComment(comment)));
+        case 'REMOVE_COMMENT':
+            const comment_id = action.payload;
+
+            return state.delete(state.findIndex((v) => v.id === comment_id));
         case 'SYNC_COMMENTS':
-            return Immutable.fromJS(buildList(action.payload.comments));
+            const { comments } = action.payload;
+
+            return Immutable.fromJS(buildList(comments));
         default:
             break;
     }

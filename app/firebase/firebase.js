@@ -17,29 +17,50 @@ class FirebaseAPI {
         this.storage = this.firebase.storage().ref();
     }
 
+    db() {
+        return this.firebase.database();
+    }
+
+    ref(location) {
+        let ref = null;
+
+        if (location) {
+            if (typeof location.once === 'function') {
+                ref = location;
+            }
+            else if (typeof location === 'string') {
+                ref = this.firebase.database().ref(location);
+            } else {
+                // throw new Error('Invalid "location" supplied to FirebaseAPI.ref!');
+            }
+        }
+
+        return ref;
+    }
+
     // REALTIME DATABASE
     // ************************************************
     add(path, payload) {
-        this.firebase.database().ref(path).set(payload).then((e) => {
+        this.ref(path).set(payload).then((e) => {
         });
     }
 
     push(path, payload, callback) {
-        this.firebase.database().ref(path).push(payload).then(function(e) {
+        this.ref(path).push(payload).then(function(e) {
         }, function(error) {
             console.log(error);
         });
     }
 
     onChange(type, path, callback) {
-        this.firebase.database().ref(path).on(type, function(childSnapshot, prevChildName) {
+        this.ref(path).on(type, function(childSnapshot, prevChildName) {
             // do something with the child
-            callback(childSnapshot.val());
+            callback(childSnapshot.val(), childSnapshot.key);
         });
     }
 
     onNewChange(type, path, callback) {
-        this.firebase.database().ref(path).orderByChild('created').startAt(Date.now()).on(type, function(childSnapshot, prevChildName) {
+        this.ref(path).orderByChild('created').startAt(Date.now()).on(type, function(childSnapshot, prevChildName) {
             // do something with the child
             callback(childSnapshot.val());
         });
@@ -60,7 +81,7 @@ class FirebaseAPI {
 
     getData(location, callback, snapshotToDataFunc) {
         snapshotToDataFunc = snapshotToDataFunc || ((s) => s.val());
-        this.firebase.database().ref(location).once('value').then((snapshot) => {
+        this.ref(location).once('value').then((snapshot) => {
             callback(snapshotToDataFunc(snapshot));
         });
     }
@@ -79,14 +100,6 @@ class FirebaseAPI {
         };
         return this.getData(location, callback, snapshotToList)
      }
-
-    onAdd(ref, callback) {
-        const dataRef = firebase.database().ref(ref);
-
-        dataRef.on('child_added', (data) => {
-            callback({ [data.key]: data.val() });
-        });
-    }
 
     // AUTHENTICATION
     // ************************************************

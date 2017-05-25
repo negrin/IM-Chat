@@ -5,8 +5,8 @@ import User from '../components/user';
 import TextInput from '../components/textInput';
 import UserControlPanel from '../components/userControlPanel';
 import SingIn from '../components/singIn';
-import { getComments } from '../reduxStore/actions/commentActions';
-import { getUsers } from '../reduxStore/actions/usersActions';
+import { getComments, addComment, removeComment } from '../reduxStore/actions/commentActions';
+import { getUsers, addUser, removeUser, updateUser } from '../reduxStore/actions/usersActions';
 import { getSettings } from '../reduxStore/actions/settingsActions';
 import FirebaseAPI from '../firebase/firebase';
 import { CommandType } from '../helpers/commentHelpers';
@@ -14,10 +14,6 @@ import { CommandType } from '../helpers/commentHelpers';
 class Main extends React.Component {
 
     componentDidMount() {
-        const { playerID } = this.props.params;
-        this.props.getUsers(playerID);
-        this.props.getComments(playerID);
-        this.props.getSettings(playerID);
         this.subscribeFB();
     }
 
@@ -32,20 +28,24 @@ class Main extends React.Component {
     subscribeFB() {
         const { playerID } = this.props.params;
 
-        FirebaseAPI.onChange('child_added', `players/${ playerID }/comments`, () => {
-            this.props.getComments(playerID);
+        const commentsRef = FirebaseAPI.ref(`players/${ playerID }/comments`).limitToLast(30);
+
+        FirebaseAPI.onChange('child_added', commentsRef, (comment, id) => {
+            comment.id = id;
+            this.props.addComment(comment);
         });
-        FirebaseAPI.onChange('child_removed', `players/${ playerID }/comments`, () => {
-            this.props.getComments(playerID);
+        FirebaseAPI.onChange('child_removed', `players/${ playerID }/comments`, (comment, id) => {
+            this.props.removeComment(id);
         });
-        FirebaseAPI.onChange('child_added', `players/${ playerID }/users`, () => {
-            this.props.getUsers(playerID);
+        FirebaseAPI.onChange('child_added', `players/${ playerID }/users`, (user, id) => {
+            user.id = id;
+            this.props.addUser(user);
         });
-        FirebaseAPI.onChange('child_removed', `players/${ playerID }/users`, () => {
-            this.props.getUsers(playerID);
+        FirebaseAPI.onChange('child_removed', `players/${ playerID }/users`, (user, id) => {
+            this.props.removeUser(id);
         });
-        FirebaseAPI.onChange('child_changed', `players/${ playerID }/users`, () => {
-            this.props.getUsers(playerID);
+        FirebaseAPI.onChange('child_changed', `players/${ playerID }/users`, (user, id) => {
+            this.props.changeUser(id, user);
         });
         FirebaseAPI.onChange('child_changed', `players/${ playerID }/settings`, (e) => {
             this.props.getSettings(playerID);
@@ -122,7 +122,12 @@ Main.propTypes = {
     settings: React.PropTypes.object,
     getComments: React.PropTypes.func,
     getUsers: React.PropTypes.func,
+    addComment: React.PropTypes.func,
+    removeComment: React.PropTypes.func,
+    addUser: React.PropTypes.func,
+    removeUser: React.PropTypes.func,
+    changeUser: React.PropTypes.func,
     getSettings: React.PropTypes.func
 };
 
-export default connect(mapStateToProps, { getComments, getUsers, getSettings })(Main);
+export default connect(mapStateToProps, { getComments, getUsers, addComment, removeComment, addUser, removeUser, updateUser, getSettings })(Main);

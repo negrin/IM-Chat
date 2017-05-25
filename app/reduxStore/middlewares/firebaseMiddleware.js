@@ -7,19 +7,26 @@ export default function firebaseMiddleware({ getState, dispatch }) {
     return (next) => (action) => {
         switch (action.type) {
             case 'GET_COMMENTS':
+                const { playerId: commentsPlayerId, limit: commentsLimit } = action.payload;
                 const getCommentsFromFB = (e) => {
                     dispatch(syncComments(e));
                 };
 
-                FirebaseAPI.getList(`players/${ action.payload }/comments`, getCommentsFromFB);
+                let commentsRef = FirebaseAPI.ref(`players/${ commentsPlayerId }/comments`);
+
+                if (commentsLimit) {
+                    commentsRef = commentsRef.limitToLast(commentsLimit);
+                }
+
+                FirebaseAPI.getList(commentsRef, getCommentsFromFB);
                 break;
             case 'POST_NEW_COMMENT':
                 FirebaseAPI.push(`players/${ action.payload.playerID }/comments`, action.payload.comment);
                 break;
-            case 'POST_NEW_USER':
+            case 'USER_SIGN_IN':
                 FirebaseAPI.push(`players/${ action.payload.playerID }/users`, action.payload.user);
                 break;
-            case 'REMOVE_USER':
+            case 'USER_SIGN_OUT':
                 FirebaseAPI.remove(`players/${ action.payload.playerID }/users/${ action.payload.id }`);
                 break;
             case 'IS_TYPING':
@@ -36,11 +43,14 @@ export default function firebaseMiddleware({ getState, dispatch }) {
                 FirebaseAPI.getData(`players/${ action.payload.playerID }/settings`, getSettingsFromFB);
                 break;
             case 'GET_USERS':
+                const { playerId: usersPlayerId } = action.payload;
                 const getUsersFromFB = (e) => {
                     dispatch(syncUsers(e));
                 };
 
-                FirebaseAPI.getList(`players/${ action.payload }/users`, getUsersFromFB);
+                const usersRef = FirebaseAPI.ref(`players/${ usersPlayerId }/users`);
+
+                FirebaseAPI.getList(usersRef, getUsersFromFB);
                 break;
             default:
                 break;
