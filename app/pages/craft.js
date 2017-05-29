@@ -18,7 +18,7 @@ class Craft extends React.Component {
                         type="button"
                         className="craft-page-button"
                         onClick={ () => window.location.href = this._generateUID() }>
-                        Craft Player
+                        Team Player
                     </button>
                 </div>
             </div>
