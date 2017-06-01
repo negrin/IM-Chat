@@ -1,4 +1,5 @@
 import Gravatar from 'react-gravatar';
+import { getVideoDuration } from '../helpers/commonHelpers';
 
 class Comment extends React.Component {
 
@@ -36,6 +37,16 @@ class Comment extends React.Component {
                     </div>
                     <div className="comment-text">
                         { this._handleBRintext() }
+                        { this.props.comment.videoInfo && this.props.comment.videoInfo.videoId &&
+                        <div className="comment-video-item">
+                            <img className="img"
+                                 src={ `https://i.ytimg.com/vi/${ this.props.comment.videoInfo.videoId }/hqdefault.jpg` }/>
+                            <div className="info">
+                                <div>{ this.props.comment.videoInfo.title }</div>
+                                <div>{ getVideoDuration(this.props.comment.videoInfo.duration) }</div>
+                            </div>
+                        </div>
+                        }
                     </div>
                 </div>
             </div>

@@ -21,7 +21,6 @@ class Player extends React.Component {
         };
 
         this._resizeScreen = this._resizeScreen.bind(this);
-        this._getVideoInfo = this._getVideoInfo.bind(this);
     }
 
     componentDidMount() {
@@ -53,8 +52,8 @@ class Player extends React.Component {
     }
 
     _parseCommand(e) {
-        const command = getCommentCommand(e);
-        const commandParam = getCommentCommandParam(e);
+        const command = getCommentCommand(e.text);
+        const commandParam = getCommentCommandParam(e.text);
         const userName = e.name;
         const email = e.email;
 
@@ -82,7 +81,7 @@ class Player extends React.Component {
                 const videoId = getUrlParamValue(commandParam, 'v');
 
                 this.props.addVideo({ videoId, userName, email, videoUId });
-                this._getVideoInfo(videoId, videoUId);
+                this.props.updateVideoInfo(e.videoInfo.title, e.videoInfo.duration, videoUId);
 
                 if (this.youtubeVideo) {
                     this.youtubeVideo.internalPlayer.getPlayerState().then(
@@ -102,20 +101,6 @@ class Player extends React.Component {
         }
 
     }
-
-    _getVideoInfo(videoId, videoUId) {
-        const xhr = new XMLHttpRequest();
-
-        xhr.open('GET', `https://www.googleapis.com/youtube/v3/videos?part=contentDetails%2C+snippet&id=${ videoId }&key=AIzaSyBYHPYcobof9p6rApxR4mIRQkj-2NdR2to`, false);
-        xhr.send();
-
-        const youtubeInfo = JSON.parse(xhr.response);
-
-        if (youtubeInfo) {
-            this.props.updateVideoInfo(youtubeInfo.items[0].snippet.title, youtubeInfo.items[0].contentDetails.duration, videoUId);
-        }
-    }
-
     _resizeScreen() {
         if (this.youtubePlaceHolder && this.youtubePlaceHolder.clientWidth > 0) {
             const heightNum = `${ Math.round(this.youtubePlaceHolder.clientWidth / 1.777) }px`;

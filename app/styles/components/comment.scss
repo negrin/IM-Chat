@@ -40,6 +40,31 @@
       font-size: 14px;
       color: #dbdbdb;
       //width: 400px;
+
+      .comment-video-item {
+        display: flex;
+        font-weight: bold;
+        margin: 5px 5px;
+
+        .img {
+          width: 100px;
+          height: 60px;
+          margin-right: 5px;
+          border: 1px solid $secondary-color;
+        }
+
+        .info {
+          font-size: 14px;
+
+          div {
+            width: 233px;
+            overflow-x: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+          }
+        }
+      }
+
     }
   }
 }

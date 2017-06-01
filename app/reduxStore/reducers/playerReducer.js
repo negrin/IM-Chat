@@ -1,4 +1,5 @@
 import Immutable from 'immutable';
+import { getVideoDuration } from '../../helpers/commonHelpers';
 
 const initialState = Immutable.fromJS({
     playlist: [],
@@ -24,19 +25,8 @@ export default function (state = initialState, action = {}) {
             const playlist2 = state.toJS().playlist;
             const currentPlayedIndex = state.toJS().currentPlayedIndex;
             const playlistID = playlist2.findIndex((video) => video.videoUId === action.payload.videoUId);
-            const timeArray = action.payload.videoDuration.match(/(\d+)/g);
+            const duration = getVideoDuration(action.payload.videoDuration);
 
-            if (timeArray) {
-                console.log('timeArray', timeArray.length - 1);
-                for (let i = 0; i <= timeArray.length - 1; i++) {
-                    if (timeArray[i].length <= 1) {
-                        timeArray[i] = `0${timeArray[i]}`;
-                    }
-                }
-            }
-            const duration = timeArray.join(':');
-
-            console.log('duration', duration);
             playlist2[playlistID].videoName = action.payload.videoName;
             playlist2[playlistID].videoDuration = duration;
             return Immutable.fromJS({ playlist: playlist2, currentPlayedIndex });

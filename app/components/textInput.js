@@ -2,6 +2,8 @@ import { connect } from 'react-redux';
 import moment from 'moment';
 import { postNewComment } from '../reduxStore/actions/commentActions';
 import { isTyping } from '../reduxStore/actions/usersActions';
+import { CommandType, parseCommentCommand, getCommentCommand, getCommentCommandParam } from '../helpers/commentHelpers';
+import { getUrlParamValue } from '../helpers/urlHelpers';
 
 class TextInput extends React.Component {
 
@@ -11,6 +13,7 @@ class TextInput extends React.Component {
             isTextBoxEmpty: true
         };
         this.keydownListener = this.keydownListener.bind(this);
+        this._getVideoInfo = this._getVideoInfo.bind(this);
     }
 
     componentDidMount() {
@@ -33,6 +36,8 @@ class TextInput extends React.Component {
 
     _handleSendNewComment() {
         if (/\S/.test(this.textInput.value)) {
+            const command = getCommentCommand(this.textInput.value);
+            const commentCommandType = parseCommentCommand(command);
             const now = Date.now();
             const momentNow = moment(now);
             const newComment = {
@@ -41,14 +46,41 @@ class TextInput extends React.Component {
                 date: momentNow.format('YYYY/MM/DD'),
                 time: momentNow.format('HH:mm:ss'),
                 text: this.textInput.value,
+                commandType: commentCommandType,
                 created: now
             };
 
+            if (commentCommandType === CommandType.ADD) {
+                const commandParam = getCommentCommandParam(this.textInput.value);
+                const videoId = getUrlParamValue(commandParam, 'v');
+
+                newComment.videoInfo = this._getVideoInfo(videoId);
+            }
             this._handleIsTyping(false);
             this.props.postNewComment(newComment, this.props.playerID);
             this.textInput.value = '';
             this.setState({ isTextBoxEmpty: true });
         }
+    }
+
+    _getVideoInfo(videoId) {
+        const xhr = new XMLHttpRequest();
+
+        xhr.open('GET', `https://www.googleapis.com/youtube/v3/videos?part=contentDetails%2C+snippet&id=${ videoId }&key=AIzaSyBYHPYcobof9p6rApxR4mIRQkj-2NdR2to`, false);
+        xhr.send();
+
+        const youtubeInfo = JSON.parse(xhr.response);
+
+        let videoInfo;
+
+        if (youtubeInfo) {
+            videoInfo = {
+                title: youtubeInfo.items[0].snippet.title,
+                duration: youtubeInfo.items[0].contentDetails.duration,
+                videoId
+            };
+        }
+        return videoInfo;
     }
 
     _handleIsTyping(value) {
