@@ -9,7 +9,7 @@ const buildList = (ob) => {
 
     for (const key in ob) {
         if (ob.hasOwnProperty(key)) {
-            const command = getCommentCommand(ob[key]);
+            const command = getCommentCommand(ob[key].text);
             const comment = Object.assign({}, ob[key], { id: key, command });
 
             if (!prevComment || (prevComment.date !== comment.date)) {

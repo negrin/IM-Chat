@@ -35,11 +35,40 @@
       font-weight: bold;
       padding-bottom: 5px;
       color: $userNameColor;
+      .comment-command-description{
+        font-weight: normal;
+        color: $secondary-color;
+      }
     }
     .comment-text{
       font-size: 14px;
-      color: #dbdbdb;
-      //width: 400px;
+      color: $secondary-color;
+
+      .comment-video-item {
+        display: flex;
+        margin: 5px 5px 5px 0;
+
+        .img {
+          width: 100px;
+          height: 60px;
+          margin-right: 5px;
+          border: 1px solid transparent;
+          &:hover {
+            border-color: $secondary-color;
+          }
+        }
+
+        .info {
+            a{
+              color: $secondary-color;
+              text-decoration: none;
+              &:hover {
+                color: $userNameColor;
+              }
+            }
+        }
+      }
+
     }
   }
 }
