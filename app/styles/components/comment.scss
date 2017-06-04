@@ -37,12 +37,12 @@
       color: $userNameColor;
       .comment-command-description{
         font-weight: normal;
-        color:#dbdbdb;
+        color: $secondary-color;
       }
     }
     .comment-text{
       font-size: 14px;
-      color: #dbdbdb;
+      color: $secondary-color;
 
       .comment-video-item {
         display: flex;
@@ -52,21 +52,20 @@
           width: 100px;
           height: 60px;
           margin-right: 5px;
-          border: 1px solid $secondary-color;
+          border: 1px solid transparent;
+          &:hover {
+            border-color: $secondary-color;
+          }
         }
 
         .info {
             a{
-              color:#dbdbdb;
+              color: $secondary-color;
               text-decoration: none;
+              &:hover {
+                color: $userNameColor;
+              }
             }
-
-          div {
-            width: 233px;
-            overflow-x: hidden;
-            white-space: nowrap;
-            text-overflow: ellipsis;
-          }
         }
       }
 
