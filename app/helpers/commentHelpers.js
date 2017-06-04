@@ -13,7 +13,8 @@ export const CommandType = {
     PLAY: 'play',
     FULL: 'full',
     NEXT: 'next',
-    HELP: 'help'
+    HELP: 'help',
+    NONE: ''
 };
 
 export const parseCommentCommand = (command) => {
@@ -35,7 +36,7 @@ export const parseCommentCommand = (command) => {
         case 'help':
             return CommandType.HELP;
         default:
-            return undefined;
+            return CommandType.NONE;
     }
 };
 
