@@ -13,7 +13,6 @@ class TextInput extends React.Component {
             isTextBoxEmpty: true
         };
         this.keydownListener = this.keydownListener.bind(this);
-        this._getVideoInfo = this._getVideoInfo.bind(this);
     }
 
     componentDidMount() {
@@ -34,6 +33,18 @@ class TextInput extends React.Component {
         }
     }
 
+    _getCommentDescription(commandType) {
+        let comment = '';
+        switch (commandType) {
+            case CommandType.ADD:
+                comment = ' added:';
+                break;
+            default:
+                break;
+        }
+        return comment;
+    }
+
     _handleSendNewComment() {
         if (/\S/.test(this.textInput.value)) {
             const command = getCommentCommand(this.textInput.value);
@@ -46,7 +57,9 @@ class TextInput extends React.Component {
                 date: momentNow.format('YYYY/MM/DD'),
                 time: momentNow.format('HH:mm:ss'),
                 text: this.textInput.value,
+                showText: commentCommandType !== CommandType.ADD,
                 commandType: commentCommandType,
+                description: this._getCommentDescription(commentCommandType),
                 created: now
             };
 

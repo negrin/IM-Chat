@@ -33,16 +33,16 @@ class Comment extends React.Component {
                 <div className="arrow-left"/>
                 <div className="comment-body">
                     <div className="comment-username">
-                        { this.props.comment.name }
+                        { this.props.comment.name } <span className="comment-command-description">{ this.props.comment.description }</span>
                     </div>
                     <div className="comment-text">
-                        { this._handleBRintext() }
+                        { this.props.comment.showText && <div>{ this._handleBRintext() }</div> }
                         { this.props.comment.videoInfo && this.props.comment.videoInfo.videoId &&
                         <div className="comment-video-item">
-                            <img className="img"
-                                 src={ `https://i.ytimg.com/vi/${ this.props.comment.videoInfo.videoId }/hqdefault.jpg` }/>
+                            <a href={ `https://www.youtube.com/watch?v=${ this.props.comment.videoInfo.videoId} ` } target="_blank"><img className="img"
+                                 src={ `https://i.ytimg.com/vi/${ this.props.comment.videoInfo.videoId }/hqdefault.jpg` }/></a>
                             <div className="info">
-                                <div>{ this.props.comment.videoInfo.title }</div>
+                                <div><a href={ `https://www.youtube.com/watch?v=${ this.props.comment.videoInfo.videoId} ` } target="_blank">{ this.props.comment.videoInfo.title }</a></div>
                                 <div>{ getVideoDuration(this.props.comment.videoInfo.duration) }</div>
                             </div>
                         </div>

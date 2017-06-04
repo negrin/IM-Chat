@@ -35,16 +35,18 @@
       font-weight: bold;
       padding-bottom: 5px;
       color: $userNameColor;
+      .comment-command-description{
+        font-weight: normal;
+        color:#dbdbdb;
+      }
     }
     .comment-text{
       font-size: 14px;
       color: #dbdbdb;
-      //width: 400px;
 
       .comment-video-item {
         display: flex;
-        font-weight: bold;
-        margin: 5px 5px;
+        margin: 5px 5px 5px 0;
 
         .img {
           width: 100px;
@@ -54,7 +56,10 @@
         }
 
         .info {
-          font-size: 14px;
+            a{
+              color:#dbdbdb;
+              text-decoration: none;
+            }
 
           div {
             width: 233px;
