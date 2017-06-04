@@ -5,7 +5,7 @@ import Gravatar from 'react-gravatar';
 import { addVideo, updateVideoInfo, selectNextVideo } from '../reduxStore/actions/playerActions';
 import FirebaseAPI from '../firebase/firebase';
 import { getUrlParamValue } from '../helpers/urlHelpers';
-import { getCommentCommand, getCommentCommandParam } from '../helpers/commentHelpers';
+import { CommandType, getCommentCommand, getCommentCommandParam } from '../helpers/commentHelpers';
 
 class Player extends React.Component {
 
@@ -52,30 +52,27 @@ class Player extends React.Component {
     }
 
     _parseCommand(e) {
-        const command = getCommentCommand(e.text);
         const commandParam = getCommentCommandParam(e.text);
         const userName = e.name;
         const email = e.email;
 
-        switch (command) {
-            case 'volume':
-            case 'vol':
+        switch (e.commandType) {
+            case CommandType.VOLUME:
                 if (!isNaN(commandParam) && commandParam >= 0 && commandParam <= 100) {
                     this.youtubeVideo.internalPlayer.setVolume(commandParam);
                     this.setState({ volume: commandParam });
                 }
                 break;
-            case 'stop':
-            case 'pause':
+            case CommandType.PAUSE:
                 this.youtubeVideo.internalPlayer.pauseVideo();
                 break;
-            case 'play':
+            case CommandType.PLAY:
                 this.youtubeVideo.internalPlayer.playVideo();
                 break;
-            case 'full':
+            case CommandType.FULL:
                 this.setState({ isFullScreen: !this.state.isFullScreen });
                 break;
-            case 'add':
+            case CommandType.ADD:
                 this.setState({ videoUId: this.state.videoUId + 1 });
                 const videoUId = this.state.videoUId;
                 const videoId = getUrlParamValue(commandParam, 'v');
@@ -93,7 +90,7 @@ class Player extends React.Component {
                     );
                 }
                 break;
-            case 'next':
+            case CommandType.NEXT:
                 this.props.selectNextVideo();
                 break;
             default:
