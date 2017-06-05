@@ -3,11 +3,15 @@ $margin: 5px;
 .chat{
   height: 100vh;
   display: flex;
-  .chat-user-list{
+
+  .chat-left-panel{
     background: $main-color;
     width: 300px;
     overflow-y: auto;
     overflow-x: hidden;
+    display:flex;
+    flex-direction: column;
+    justify-content: space-between;
   }
   .chat-body{
     flex-grow: 5;
