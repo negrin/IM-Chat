@@ -45,7 +45,7 @@ class Main extends React.Component {
             this.props.removeUser(id);
         });
         FirebaseAPI.onChange('child_changed', `players/${ playerID }/users`, (user, id) => {
-            this.props.changeUser(id, user);
+            this.props.updateUser(id, user);
         });
         FirebaseAPI.onChange('child_changed', `players/${ playerID }/settings`, (e) => {
             this.props.getSettings(playerID);
@@ -126,7 +126,7 @@ Main.propTypes = {
     removeComment: React.PropTypes.func,
     addUser: React.PropTypes.func,
     removeUser: React.PropTypes.func,
-    changeUser: React.PropTypes.func,
+    updateUser: React.PropTypes.func,
     getSettings: React.PropTypes.func
 };
 

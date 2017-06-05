@@ -1,6 +1,6 @@
 export const getCommentCommandAndParams = (comment) => {
-    if (comment.text[0] === '/') {
-        return comment.text.substr(1).split(' ', 2);
+    if (comment[0] === '/') {
+        return comment.substr(1).split(' ', 2);
     }
     return null;
 };

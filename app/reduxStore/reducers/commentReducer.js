@@ -4,7 +4,7 @@ import { getCommentCommand } from '../../helpers/commentHelpers';
 const initialComments = Immutable.fromJS([]);
 
 const buildComment = (data) => {
-    const command = getCommentCommand(data);
+    const command = getCommentCommand(data.text);
 
     return Object.assign({}, data, { command });
 };
