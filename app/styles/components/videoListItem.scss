@@ -1,0 +1,38 @@
+.video-item-container {
+  display: block;
+  background: silver;
+  border-bottom: 1px solid black;
+  .video-item-body {
+    flex: 1;
+    border-radius: 5px;
+    padding: 10px;
+
+    .video-item {
+      display: flex;
+      margin: 5px 5px 5px 0;
+
+      .img {
+        width: 100px;
+        height: 60px;
+        margin-right: 5px;
+        border: 1px solid transparent;
+
+        & :hover {
+          border-color: $secondary-color;
+        }
+
+      }
+
+      .info {
+
+        a {
+          color: $secondary-color;
+          text-decoration: none;
+          &:hover {
+            color: $userNameColor;
+          }
+        }
+      }
+    }
+  }
+}

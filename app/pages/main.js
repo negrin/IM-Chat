@@ -10,8 +10,29 @@ import { getUsers } from '../reduxStore/actions/usersActions';
 import { getSettings } from '../reduxStore/actions/settingsActions';
 import FirebaseAPI from '../firebase/firebase';
 import { CommandType } from '../helpers/commentHelpers';
+import SearchYoutube from '../components/search/searchYoutube';
+import search from '../helpers/youtubeApiSearch';
+import VideoList from '../components/search/videoList';
+import debounce from 'debounce';
+
+const createVideo = (item) => {
+    return {
+        id: item.id.videoId,
+        title: item.snippet.title,
+        description: item.snippet.description,
+        thumbnailUrl: item.snippet.thumbnails.default.url
+    };
+};
 
 class Main extends React.Component {
+
+    constructor(props) {
+        super(props);
+
+        this.state = { videos: null };
+
+        this.handleSearch = debounce(this.handleSearch.bind(this), 300);
+    }
 
     componentDidMount() {
         const { playerID } = this.props.params;
@@ -59,7 +80,37 @@ class Main extends React.Component {
         return <Comment key={ comment.id } comment={ comment }/>;
     }
 
+    handleSearch(q) {
+        search('AIzaSyDOSKJMms3-EdO9mFv2t4-nkKcXYggXK3s', q)
+            .then((data) => {
+                console.log(data);
+                const videos = data.items.map((item) => createVideo(item));
+                this.setState({ videos });
+            })
+            .catch((error) => console.error(error));
+    }
+
+    sendVideoAsComment(video) {
+    }
+
     render() {
+
+        const { videos } = this.state;
+
+        let videosContainer = null;
+
+        if (videos) {
+            if (videos.length) {
+                videosContainer = (
+                    <div>
+                        <VideoList videos={ videos } onSend={ this.sendVideoAsComment }/>
+                    </div>
+                );
+            } else {
+                videosContainer = <div>No videos found</div>;
+            }
+        }
+
         return (
             <div>
                 <SingIn playerID={ this.props.params.playerID }/>
@@ -82,7 +133,8 @@ class Main extends React.Component {
                             ) }
                         </div>
                         <div className="chat-new-message">
-                            <TextInput playerID={ this.props.params.playerID }/>
+                            { videosContainer }
+                            <TextInput playerID={ this.props.params.playerID } onSearch={ this.handleSearch }/>
                         </div>
                     </div>
                 </div>

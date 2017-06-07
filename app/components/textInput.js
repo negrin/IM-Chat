@@ -106,10 +106,11 @@ class TextInput extends React.Component {
         });
     }
 
-    _handleButtonColor() {
+    _handleChange() {
         this._handleIsTyping(true);
         if (/\S/.test(this.textInput.value)) {
             this.setState({ isTextBoxEmpty: false });
+            this.props.onSearch(this.textInput.value);
         } else {
             this.setState({ isTextBoxEmpty: true });
         }
@@ -122,7 +123,7 @@ class TextInput extends React.Component {
 
                 <textarea
                     className="text-box"
-                    onChange={ () => this._handleButtonColor() }
+                    onChange={ () => this._handleChange() }
                     placeholder="Type your message..."
                     ref={ (instance) => { this.textInput = instance; } }/>
                 <button className="btn"
@@ -147,7 +148,8 @@ TextInput.propTypes = {
     postNewComment: React.PropTypes.func,
     activeUser: React.PropTypes.object,
     comments: React.PropTypes.array,
-    users: React.PropTypes.array
+    users: React.PropTypes.array,
+    onSearch: React.PropTypes.func
 };
 
 export default connect(mapStateToProps, { postNewComment, isTyping })(TextInput);

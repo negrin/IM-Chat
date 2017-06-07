@@ -1,0 +1,14 @@
+.video-list-container {
+  display: flex;
+  flex-direction: column;
+  height: 64vh;
+  .video-list {
+    overflow: auto;
+    flex: 4;
+    padding: 0;
+    margin: 0;
+    border-top: 1px solid black;
+    border-left: 1px solid black;
+    border-right: 1px solid black;
+  }
+}
