@@ -241,9 +241,8 @@ class Player extends React.Component {
 const mapStateToProps = (state) => {
     const { playlist, currentPlayedIndex } = state.playerReducer.toJS();
     const currentVideo = playlist[currentPlayedIndex || 0] || {};
-    const { volume } = state.settingsReducer.toJS();
 
-    return { currentVideo, playlist, volume };
+    return { currentVideo, playlist };
 };
 
 Player.propTypes = {
@@ -253,8 +252,7 @@ Player.propTypes = {
     addVideo: React.PropTypes.func.isRequired,
     updateVideoInfo: React.PropTypes.func.isRequired,
     selectNextVideo: React.PropTypes.func.isRequired,
-    getSettings: React.PropTypes.func,
-    volume: React.PropTypes.string
+    getSettings: React.PropTypes.func
 };
 
 export default connect(mapStateToProps, { addVideo, selectNextVideo, updateVideoInfo, getSettings })(Player);

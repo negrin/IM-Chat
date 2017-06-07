@@ -72,7 +72,7 @@ UserControlPanel.propTypes = {
     postNewComment: React.PropTypes.func,
     updateSettings: React.PropTypes.func,
     activeUser: React.PropTypes.object,
-    settings: React.PropTypes.array
+    settings: React.PropTypes.object
 };
 
 export default connect(mapStateToProps, { postNewComment, updateSettings })(UserControlPanel);

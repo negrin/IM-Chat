@@ -96,7 +96,7 @@ const mapStateToProps = (state) => {
     return {
         comments: state.commentReducer.toJS(),
         users: state.userReducer.toJS(),
-        settings: state.settingsReducer.toJS()
+        settings: state.settingsReducer ? state.settingsReducer.toJS() : { settings: {} }
     };
 };
 
@@ -104,7 +104,7 @@ Main.propTypes = {
     comments: React.PropTypes.array,
     params: React.PropTypes.object,
     users: React.PropTypes.array,
-    settings: React.PropTypes.array,
+    settings: React.PropTypes.object,
     getComments: React.PropTypes.func,
     getUsers: React.PropTypes.func,
     getSettings: React.PropTypes.func
