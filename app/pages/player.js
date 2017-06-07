@@ -3,6 +3,7 @@ import cx from 'classnames';
 import YouTube from 'react-youtube';
 import Gravatar from 'react-gravatar';
 import { addVideo, updateVideoInfo, selectNextVideo } from '../reduxStore/actions/playerActions';
+import { getSettings } from '../reduxStore/actions/settingsActions';
 import FirebaseAPI from '../firebase/firebase';
 import { getUrlParamValue } from '../helpers/urlHelpers';
 import { CommandType, getCommentCommand, getCommentCommandParam } from '../helpers/commentHelpers';
@@ -49,6 +50,15 @@ class Player extends React.Component {
         FirebaseAPI.onNewChange('child_added', `players/${ this.props.params.playerID }/comments`, (e) => {
             this._parseCommand(e);
         });
+        FirebaseAPI.onChange('child_changed', `players/${ this.props.params.playerID }/settings`, (e) => {
+            this.changeVolume(e);
+        });
+    }
+
+    changeVolume(e) {
+        this.props.getSettings(this.props.params.playerID);
+        this.youtubeVideo.internalPlayer.setVolume(Number(e));
+        this.setState({ volume: Number(e) });
     }
 
     _parseCommand(e) {
@@ -231,8 +241,9 @@ class Player extends React.Component {
 const mapStateToProps = (state) => {
     const { playlist, currentPlayedIndex } = state.playerReducer.toJS();
     const currentVideo = playlist[currentPlayedIndex || 0] || {};
+    const { volume } = state.settingsReducer.toJS();
 
-    return { currentVideo, playlist };
+    return { currentVideo, playlist, volume };
 };
 
 Player.propTypes = {
@@ -242,6 +253,8 @@ Player.propTypes = {
     addVideo: React.PropTypes.func.isRequired,
     updateVideoInfo: React.PropTypes.func.isRequired,
     selectNextVideo: React.PropTypes.func.isRequired,
+    getSettings: React.PropTypes.func,
+    volume: React.PropTypes.string
 };
 
-export default connect(mapStateToProps, { addVideo, selectNextVideo, updateVideoInfo })(Player);
+export default connect(mapStateToProps, { addVideo, selectNextVideo, updateVideoInfo, getSettings })(Player);

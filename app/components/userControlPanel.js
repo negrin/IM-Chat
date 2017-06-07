@@ -1,6 +1,7 @@
 import { connect } from 'react-redux';
 import { CommandType } from '../helpers/commentHelpers';
 import { postNewComment } from '../reduxStore/actions/commentActions';
+import { updateSettings } from '../reduxStore/actions/settingsActions';
 import moment from 'moment';
 
 class UserControlPanel extends React.Component {
@@ -26,7 +27,7 @@ class UserControlPanel extends React.Component {
     _handleVolumeChange() {
         const comment = this.getNewComment(CommandType.VOLUME, '/vol ' + this.volumeInput.value);
 
-        this.props.postNewComment(comment, this.props.playerID);
+        this.props.updateSettings(this.props.playerID, 'volume', this.volumeInput.value);
     }
 
     getNewComment(commandType, text) {
@@ -54,7 +55,7 @@ class UserControlPanel extends React.Component {
                 <div className="action-btn pause" onClick={ this._handleSendPauseCommand.bind(this) }></div>
                 <div className="action-btn next" onClick={ this._handleSendNextCommand.bind(this) }></div>
                 <input className="volume" type="range" min="0" max="100" ref={ (instance) => { this.volumeInput = instance; } }
-                        onMouseUp={ () => this._handleVolumeChange() } step="1"/>
+                        onChange={ () => this._handleVolumeChange() } step="1" value={ this.props.settings.volume }/>
             </div>
         );
     }
@@ -69,8 +70,10 @@ const mapStateToProps = (state) => {
 UserControlPanel.propTypes = {
     playerID: React.PropTypes.string,
     postNewComment: React.PropTypes.func,
-    activeUser: React.PropTypes.object
+    updateSettings: React.PropTypes.func,
+    activeUser: React.PropTypes.object,
+    settings: React.PropTypes.array
 };
 
-export default connect(mapStateToProps, { postNewComment })(UserControlPanel);
+export default connect(mapStateToProps, { postNewComment, updateSettings })(UserControlPanel);
 
