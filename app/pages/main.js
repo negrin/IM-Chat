@@ -3,16 +3,21 @@ import Comment from '../components/comment';
 import DateMarker from '../components/dateMarker';
 import User from '../components/user';
 import TextInput from '../components/textInput';
+import UserControlPanel from '../components/userControlPanel';
 import SingIn from '../components/singIn';
 import { getComments } from '../reduxStore/actions/commentActions';
 import { getUsers } from '../reduxStore/actions/usersActions';
+import { getSettings } from '../reduxStore/actions/settingsActions';
 import FirebaseAPI from '../firebase/firebase';
+import { CommandType } from '../helpers/commentHelpers';
 
 class Main extends React.Component {
 
     componentDidMount() {
-        this.props.getUsers();
-        this.props.getComments();
+        const { playerID } = this.props.params;
+        this.props.getUsers(playerID);
+        this.props.getComments(playerID);
+        this.props.getSettings(playerID);
         this.subscribeFB();
     }
 
@@ -42,6 +47,9 @@ class Main extends React.Component {
         FirebaseAPI.onChange('child_changed', `players/${ playerID }/users`, () => {
             this.props.getUsers(playerID);
         });
+        FirebaseAPI.onChange('child_changed', `players/${ playerID }/settings`, (e) => {
+            this.props.getSettings(playerID);
+        });
     }
 
     renderComment(comment) {
@@ -56,15 +64,20 @@ class Main extends React.Component {
             <div>
                 <SingIn playerID={ this.props.params.playerID }/>
                 <div className="chat">
-                    <div className="chat-user-list">
-                        { this.props.users.map((user) => {
-                            return <User key={ user.id } user={ user }/>;
-                        }) }
+                    <div className="chat-left-panel">
+                        <div>
+                            { this.props.users.map((user) => {
+                                return <User key={ user.id } user={ user }/>;
+                            }) }
+                        </div>
+                        <UserControlPanel playerID={ this.props.params.playerID } settings={ this.props.settings }/>
                     </div>
                     <div className="chat-body">
                         <div ref={ (instance) => { this.massageDiv = instance; } } className="chat-messages">
                             { this.props.comments.map((comment) => {
-                                return this.renderComment(comment);
+                                if (comment.commandType === CommandType.ADD) {
+                                    return this.renderComment(comment);
+                                }
                             }
                             ) }
                         </div>
@@ -82,7 +95,8 @@ class Main extends React.Component {
 const mapStateToProps = (state) => {
     return {
         comments: state.commentReducer.toJS(),
-        users: state.userReducer.toJS()
+        users: state.userReducer.toJS(),
+        settings: state.settingsReducer.toJS()
     };
 };
 
@@ -90,8 +104,10 @@ Main.propTypes = {
     comments: React.PropTypes.array,
     params: React.PropTypes.object,
     users: React.PropTypes.array,
+    settings: React.PropTypes.array,
     getComments: React.PropTypes.func,
-    getUsers: React.PropTypes.func
+    getUsers: React.PropTypes.func,
+    getSettings: React.PropTypes.func
 };
 
-export default connect(mapStateToProps, { getComments, getUsers })(Main);
+export default connect(mapStateToProps, { getComments, getUsers, getSettings })(Main);

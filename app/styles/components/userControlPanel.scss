@@ -1,0 +1,95 @@
+.user-control-panel {
+  display: flex;
+  background-color: black;
+  padding-bottom: 27px;
+  padding-top: 27px;
+
+  .volume{
+    margin-left: 10px;
+  }
+
+  .action-btn {
+
+    cursor: pointer;
+    margin-left: 7px;
+
+    &.play {
+      position: relative;
+      border: 3px solid #fff;
+      width: 36px;
+      height: 36px;
+      background-color: transparent;
+      border-radius: 50%;
+    }
+
+    &.play:before {
+      position: absolute;
+      left: 14px;
+      top: 10px;
+      content: '';
+      border-left: 12px solid white;
+      border-top: 8px solid transparent;
+      border-right: 8px solid transparent;
+      border-bottom: 8px solid transparent;
+    }
+
+    &.pause {
+      position: relative;
+      border: 3px solid #fff;
+      width: 36px;
+      height: 36px;
+      background-color: transparent;
+      border-radius: 50%;
+    }
+
+    &.pause:before {
+      width: 6px;
+      height: 15px;
+      background: #fff;
+      position: absolute;
+      content: "";
+      top: 11px;
+      left: 9px;
+    }
+
+    &.pause:after {
+      width: 6px;
+      height: 15px;
+      background: #fff;
+      position: absolute;
+      content: "";
+      top: 11px;
+      right: 9px;
+    }
+
+    &.next {
+      position: relative;
+      border: 3px solid #fff;
+      width: 36px;
+      height: 36px;
+      background-color: transparent;
+      border-radius: 50%;
+    }
+
+    &.next:before {
+      position: absolute;
+      left: 12px;
+      top: 10px;
+      content: '';
+      border-left: 12px solid white;
+      border-top: 8px solid transparent;
+      border-right: 8px solid transparent;
+      border-bottom: 8px solid transparent;
+    }
+
+    &.next:after {
+      width: 3px;
+      height: 18px;
+      position: absolute;
+      left: 24px;
+      top: 9px;
+      content: '';
+      background: #fff;
+    }
+  }
+}

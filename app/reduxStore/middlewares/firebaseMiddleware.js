@@ -1,5 +1,6 @@
 import { syncComments } from '../actions/commentActions';
 import { syncUsers } from '../actions/usersActions';
+import { syncSettings } from '../actions/settingsActions';
 import FirebaseAPI from '../../firebase/firebase';
 
 export default function firebaseMiddleware({ getState, dispatch }) {
@@ -23,6 +24,16 @@ export default function firebaseMiddleware({ getState, dispatch }) {
                 break;
             case 'IS_TYPING':
                 FirebaseAPI.add(`players/${ action.payload.playerID }/users/${ action.payload.id }/isTyping`, action.payload.value);
+                break;
+            case 'UPDATE_SETTINGS':
+                FirebaseAPI.add(`players/${ action.payload.playerID }/settings/${ action.payload.key }`, action.payload.value);
+                break;
+            case 'GET_SETTINGS':
+                const getSettingsFromFB = (e) => {
+                    dispatch(syncSettings(e));
+                };
+
+                FirebaseAPI.getData(`players/${ action.payload.playerID }/settings`, getSettingsFromFB);
                 break;
             case 'GET_USERS':
                 const getUsersFromFB = (e) => {
