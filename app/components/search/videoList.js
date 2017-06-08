@@ -6,10 +6,15 @@ const { arrayOf, shape, string, func } = React.PropTypes;
 
 const VideoList = ({ videos, onSend }) => {
     const videoItems = videos.map((video, index) => {
-        return <VideoListItem key={ video.id } video={ video } itemType={ index % 2 === 0 ? 'even' : 'odd' }  onSend={ onSend }/>;
+        return <VideoListItem key={ video.id } video={ video } onSend={ onSend }/>;
     });
 
-    return <div className="video-list-container"><ul className="video-list">{ videoItems }</ul></div>;
+    return (
+        <div className="video-list-container">
+            <h3>Search results:</h3>
+            <ul className="video-list">{ videoItems }</ul>
+        </div>
+    );
 };
 
 VideoList.propTypes = {

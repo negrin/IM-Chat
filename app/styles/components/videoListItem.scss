@@ -1,10 +1,9 @@
 .video-item-container {
   display: block;
-  background: silver;
   border-bottom: 1px solid black;
 
-  &.odd{
-    background: $secondary-color;
+  &:hover{
+    background: silver;
   }
 
   .video-item-body {
