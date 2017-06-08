@@ -12,10 +12,7 @@ export const getVideoDuration = (videoDuration) => {
 };
 
 export const parseJson = (response) => {
-    if (response.ok) {
-        return Promise.resolve(response);
-    }
-    return Promise.reject(new Error(response.statusText));
+    return response.json();
 };
 
 export const checkStatus = (response) => {

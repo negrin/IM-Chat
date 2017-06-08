@@ -12,10 +12,11 @@ const VideoListItem = ({ video, itemType, onSend }) => {
         <li className={ `video-item-container ${ itemType }` } onClick={ handleClick }>
             <div className="video-item-body">
                 <div className="video-item">
-                    <a href={ `https://www.youtube.com/watch?v=${ video.id } ` } target="_blank"><img className="img"
-                       src={ video.thumbnailUrl }/></a>
+                    <img className="img" src={ video.thumbnailUrl }/>
                     <div className="info">
-                        <div><a href={ `https://www.youtube.com/watch?v=${ video.id} ` } target="_blank">{ video.title }</a></div>
+                        <div>{ video.title }</div>
+                        <div className="video-description">{ video.description }</div>
+                        <div>{ video.channelTitle }</div>
                     </div>
                 </div>
             </div>
