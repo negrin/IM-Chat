@@ -1,7 +1,12 @@
 .video-list-container {
   display: flex;
   flex-direction: column;
+  position: absolute;
+  z-index: 10;
+  bottom: 96px;
   height: 64vh;
+  width: 99%;
+  cursor: pointer;
   .video-list {
     overflow: auto;
     flex: 4;

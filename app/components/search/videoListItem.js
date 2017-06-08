@@ -1,10 +1,15 @@
 import React from 'react';
 
-const { shape, string } = React.PropTypes;
+const { shape, string, func } = React.PropTypes;
 
-const VideoListItem = ({ video }) => {
+const VideoListItem = ({ video, itemType, onSend }) => {
+
+    function handleClick() {
+        onSend(video.id);
+    }
+
     return (
-        <li className="video-item-container">
+        <li className={ `video-item-container ${ itemType }` } onClick={ handleClick }>
             <div className="video-item-body">
                 <div className="video-item">
                     <a href={ `https://www.youtube.com/watch?v=${ video.id } ` } target="_blank"><img className="img"
@@ -19,6 +24,8 @@ const VideoListItem = ({ video }) => {
 };
 
 VideoListItem.propTypes = {
+    onSend: func,
+    itemType: string,
     video: shape({
         title: string.isRequired,
         thumbnailUrl: string.isRequired,

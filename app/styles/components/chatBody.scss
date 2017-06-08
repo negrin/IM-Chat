@@ -14,6 +14,7 @@ $margin: 5px;
     justify-content: space-between;
   }
   .chat-body{
+    position: relative;
     flex-grow: 5;
     background: $secondary-color;
     display: flex;

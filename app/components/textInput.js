@@ -4,14 +4,30 @@ import { postNewComment } from '../reduxStore/actions/commentActions';
 import { isTyping } from '../reduxStore/actions/usersActions';
 import { CommandType, parseCommentCommand, getCommentCommand, getCommentCommandParam } from '../helpers/commentHelpers';
 import { getUrlParamValue } from '../helpers/urlHelpers';
+import VideoList from '../components/search/videoList';
+import debounce from 'debounce';
+import { search, getVideoInfo } from '../helpers/youtubeHelpers';
+
+
+const createVideo = (item) => {
+    return {
+        id: item.id.videoId,
+        title: item.snippet.title,
+        description: item.snippet.description,
+        thumbnailUrl: item.snippet.thumbnails.default.url
+    };
+};
 
 class TextInput extends React.Component {
 
     constructor() {
         super();
         this.state = {
-            isTextBoxEmpty: true
+            isTextBoxEmpty: true,
+            videos: null
         };
+
+        this.handleSearch = debounce(this.handleSearch.bind(this), 300);
         this.keydownListener = this.keydownListener.bind(this);
     }
 
@@ -67,33 +83,13 @@ class TextInput extends React.Component {
                 const commandParam = getCommentCommandParam(this.textInput.value);
                 const videoId = getUrlParamValue(commandParam, 'v');
 
-                newComment.videoInfo = this._getVideoInfo(videoId);
+                newComment.videoInfo = getVideoInfo(videoId);
             }
             this._handleIsTyping(false);
             this.props.postNewComment(newComment, this.props.playerID);
             this.textInput.value = '';
             this.setState({ isTextBoxEmpty: true });
         }
-    }
-
-    _getVideoInfo(videoId) {
-        const xhr = new XMLHttpRequest();
-
-        xhr.open('GET', `https://www.googleapis.com/youtube/v3/videos?part=contentDetails%2C+snippet&id=${ videoId }&key=AIzaSyBYHPYcobof9p6rApxR4mIRQkj-2NdR2to`, false);
-        xhr.send();
-
-        const youtubeInfo = JSON.parse(xhr.response);
-
-        let videoInfo;
-
-        if (youtubeInfo) {
-            videoInfo = {
-                title: youtubeInfo.items[0].snippet.title,
-                duration: youtubeInfo.items[0].contentDetails.duration,
-                videoId
-            };
-        }
-        return videoInfo;
     }
 
     _handleIsTyping(value) {
@@ -110,17 +106,53 @@ class TextInput extends React.Component {
         this._handleIsTyping(true);
         if (/\S/.test(this.textInput.value)) {
             this.setState({ isTextBoxEmpty: false });
-            this.props.onSearch(this.textInput.value);
         } else {
             this.setState({ isTextBoxEmpty: true });
         }
+        if (this.textInput.value === '' || this.textInput.value.startsWith('/')) {
+            this.setState({ videos: [] });
+        } else {
+            this.handleSearch(this.textInput.value);
+        }
+    }
+
+    handleSearch(q) {
+        search('AIzaSyDOSKJMms3-EdO9mFv2t4-nkKcXYggXK3s', q)
+            .then((data) => {
+                const videos = data.items.map((item) => createVideo(item));
+                this.setState({ videos });
+            })
+            .catch((error) => console.error(error));
+    }
+
+    sendVideoAsComment(videoId) {
+        this.setState({ videos: [] });
+        this.textInput.value = '/add https://www.youtube.com/watch?v=' + videoId;
+        this._handleSendNewComment();
     }
 
 
     render() {
+
+        const { videos } = this.state;
+
+        let videosContainer = null;
+
+        if (videos) {
+            if (videos.length) {
+                videosContainer = (
+                    <div>
+                        <VideoList videos={ videos } onSend={ this.sendVideoAsComment.bind(this) }/>
+                    </div>
+                );
+            } else {
+                videosContainer = null;
+            }
+        }
+
         return (
             <div className="text-input">
-
+                { videosContainer }
                 <textarea
                     className="text-box"
                     onChange={ () => this._handleChange() }
@@ -148,8 +180,7 @@ TextInput.propTypes = {
     postNewComment: React.PropTypes.func,
     activeUser: React.PropTypes.object,
     comments: React.PropTypes.array,
-    users: React.PropTypes.array,
-    onSearch: React.PropTypes.func
+    users: React.PropTypes.array
 };
 
 export default connect(mapStateToProps, { postNewComment, isTyping })(TextInput);

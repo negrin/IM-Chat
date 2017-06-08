@@ -2,6 +2,11 @@
   display: block;
   background: silver;
   border-bottom: 1px solid black;
+
+  &.odd{
+    background: $secondary-color;
+  }
+
   .video-item-body {
     flex: 1;
     border-radius: 5px;
@@ -26,10 +31,10 @@
       .info {
 
         a {
-          color: $secondary-color;
+          color: $black;
           text-decoration: none;
           &:hover {
-            color: $userNameColor;
+            text-decoration: underline;
           }
         }
       }

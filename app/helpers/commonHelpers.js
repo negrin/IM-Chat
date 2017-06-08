@@ -10,3 +10,19 @@ export const getVideoDuration = (videoDuration) => {
     }
     return timeArray ? timeArray.join(':') : '';
 };
+
+export const parseJson = (response) => {
+    if (response.ok) {
+        return Promise.resolve(response);
+    }
+    return Promise.reject(new Error(response.statusText));
+};
+
+export const checkStatus = (response) => {
+    if (response.ok) {
+        return Promise.resolve(response);
+    }
+    return Promise.reject(new Error(response.statusText));
+};
+
+
