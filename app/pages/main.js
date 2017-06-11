@@ -28,7 +28,10 @@ class Main extends React.Component {
     subscribeFB() {
         const { playerID } = this.props.params;
 
-        const commentsRef = FirebaseAPI.ref(`players/${ playerID }/comments`).limitToLast(30);
+        const commentsRef = FirebaseAPI.ref(`players/${ playerID }/comments`)
+          .orderByChild('commandType')
+          .equalTo(CommandType.ADD)
+          .limitToLast(30);
 
         FirebaseAPI.onChange('child_added', commentsRef, (comment, id) => {
             comment.id = id;
@@ -59,11 +62,12 @@ class Main extends React.Component {
 
         comments.forEach((comment) => {
             let doRenderComment = false;
+
             if (comment.commandType === CommandType.ADD) {
                 doRenderComment = true;
             }
             if (!doRenderComment) {
-              return null;
+                return null;
             }
             if (!prevComment || (prevComment.date !== comment.date)) {
                 rendered.push(this.renderDateMarker(comment.date));
