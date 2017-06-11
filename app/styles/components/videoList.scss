@@ -11,11 +11,24 @@
   border-left: 1px solid black;
   border-right: 1px solid black;
 
-  h3{
-    background: silver;
-    margin: 0;
+  .title {
     padding: 11px;
     border-bottom: 1px solid black;
+    background: silver;
+
+    .youtube-img {
+      width: 100px;
+      float: left;
+    }
+
+    span {
+      float: left;
+      padding-top: 25px;
+      padding-left: 6px;
+      margin: 0;
+      font-size: 21px;
+
+    }
   }
   .video-list {
     cursor: pointer;

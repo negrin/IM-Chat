@@ -29,6 +29,9 @@ class TextInput extends React.Component {
 
         this.handleSearch = debounce(this.handleSearch.bind(this), 300);
         this.keydownListener = this.keydownListener.bind(this);
+        this._handleSendNewComment = this._handleSendNewComment.bind(this);
+        this.sendVideoAsComment = this.sendVideoAsComment.bind(this);
+        this.hideVideoList = this.hideVideoList.bind(this);
     }
 
     componentDidMount() {
@@ -109,7 +112,7 @@ class TextInput extends React.Component {
         } else {
             this.setState({ isTextBoxEmpty: true });
         }
-        if (this.textInput.value === '' || this.textInput.value.startsWith('/')) {
+        if (this.textInput.value.trim() === '' || this.textInput.value.startsWith('/')) {
             this.setState({ videos: [] });
         } else {
             this.handleSearch(this.textInput.value);
@@ -119,8 +122,10 @@ class TextInput extends React.Component {
     handleSearch(q) {
         search('AIzaSyDOSKJMms3-EdO9mFv2t4-nkKcXYggXK3s', q)
             .then((data) => {
-                const videos = data.items.map((item) => createVideo(item));
-                this.setState({ videos });
+                if (this.textInput.value.trim() !== '' && !this.textInput.value.startsWith('/')) {
+                    const videos = data.items.map((item) => createVideo(item));
+                    this.setState({ videos });
+                }
             })
             .catch((error) => console.error(error));
     }
@@ -131,6 +136,9 @@ class TextInput extends React.Component {
         this._handleSendNewComment();
     }
 
+    hideVideoList() {
+        this.setState({ videos: [] });
+    }
 
     render() {
 
@@ -142,7 +150,7 @@ class TextInput extends React.Component {
             if (videos.length) {
                 videosContainer = (
                     <div>
-                        <VideoList videos={ videos } onSend={ this.sendVideoAsComment.bind(this) }/>
+                        <VideoList videos={ videos } onSend={ this.sendVideoAsComment } hideList={ this.hideVideoList }/>
                     </div>
                 );
             } else {
@@ -160,7 +168,7 @@ class TextInput extends React.Component {
                     ref={ (instance) => { this.textInput = instance; } }/>
                 <button className="btn"
                         style={ this.state.isTextBoxEmpty ? { background: '#a3a3a3', cursor: 'default' } : null }
-                        onClick={ this._handleSendNewComment.bind(this) }>SEND</button>
+                        onClick={ this._handleSendNewComment }>SEND</button>
             </div>
         );
     }
