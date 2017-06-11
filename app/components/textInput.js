@@ -7,6 +7,7 @@ import { getUrlParamValue } from '../helpers/urlHelpers';
 import VideoList from '../components/search/videoList';
 import debounce from 'debounce';
 import { search, getVideoInfo } from '../helpers/youtubeHelpers';
+import { updateSettings } from '../reduxStore/actions/settingsActions';
 
 
 const createVideo = (item) => {
@@ -68,6 +69,8 @@ class TextInput extends React.Component {
         if (/\S/.test(this.textInput.value)) {
             const command = getCommentCommand(this.textInput.value);
             const commentCommandType = parseCommentCommand(command);
+            const commandParam = getCommentCommandParam(this.textInput.value);
+
             const now = Date.now();
             const momentNow = moment(now);
             const newComment = {
@@ -82,12 +85,19 @@ class TextInput extends React.Component {
                 created: now
             };
 
-            if (commentCommandType === CommandType.ADD) {
-                const commandParam = getCommentCommandParam(this.textInput.value);
-                const videoId = getUrlParamValue(commandParam, 'v');
+            switch (commentCommandType) {
+                case CommandType.VOLUME:
+                    this.props.updateSettings(this.props.playerID, 'volume', commandParam);
+                    break;
+                case CommandType.ADD:
+                    const videoId = getUrlParamValue(commandParam, 'v');
 
-                newComment.videoInfo = getVideoInfo(videoId);
+                    newComment.videoInfo = getVideoInfo(videoId);
+                    break;
+                default:
+                    break;
             }
+
             this._handleIsTyping(false);
             this.props.postNewComment(newComment, this.props.playerID);
             this.textInput.value = '';
@@ -188,7 +198,8 @@ TextInput.propTypes = {
     postNewComment: React.PropTypes.func,
     activeUser: React.PropTypes.object,
     comments: React.PropTypes.array,
-    users: React.PropTypes.array
+    users: React.PropTypes.array,
+    updateSettings: React.PropTypes.func
 };
 
-export default connect(mapStateToProps, { postNewComment, isTyping })(TextInput);
+export default connect(mapStateToProps, { postNewComment, isTyping, updateSettings })(TextInput);
