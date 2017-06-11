@@ -58,13 +58,18 @@ class Main extends React.Component {
         let prevComment;
 
         comments.forEach((comment) => {
+            let doRenderComment = false;
+            if (comment.commandType === CommandType.ADD) {
+                doRenderComment = true;
+            }
+            if (!doRenderComment) {
+              return null;
+            }
             if (!prevComment || (prevComment.date !== comment.date)) {
                 rendered.push(this.renderDateMarker(comment.date));
             }
-            if (comment.commandType === CommandType.ADD) {
-                rendered.push(this.renderComment(comment));
-                prevComment = comment;
-            }
+            rendered.push(this.renderComment(comment));
+            prevComment = comment;
         });
 
         return rendered;
