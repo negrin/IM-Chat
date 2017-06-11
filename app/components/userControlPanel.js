@@ -25,8 +25,6 @@ class UserControlPanel extends React.Component {
     }
 
     _handleVolumeChange() {
-        const comment = this.getNewComment(CommandType.VOLUME, '/vol ' + this.volumeInput.value);
-
         this.props.updateSettings(this.props.playerID, 'volume', this.volumeInput.value);
     }
 

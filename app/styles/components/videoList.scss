@@ -1,0 +1,40 @@
+.video-list-container {
+  background: $secondary-color;
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  z-index: 10;
+  bottom: 96px;
+  height: 64vh;
+  width: 99%;
+  border-top: 1px solid black;
+  border-left: 1px solid black;
+  border-right: 1px solid black;
+
+  .title {
+    padding: 11px;
+    border-bottom: 1px solid black;
+    background: silver;
+
+    .youtube-img {
+      width: 100px;
+      float: left;
+    }
+
+    span {
+      float: left;
+      padding-top: 25px;
+      padding-left: 6px;
+      margin: 0;
+      font-size: 21px;
+
+    }
+  }
+  .video-list {
+    cursor: pointer;
+    overflow: auto;
+    flex: 4;
+    padding: 0;
+    margin: 0;
+  }
+}

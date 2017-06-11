@@ -60,6 +60,7 @@ class Main extends React.Component {
     }
 
     render() {
+
         return (
             <div>
                 <SingIn playerID={ this.props.params.playerID }/>

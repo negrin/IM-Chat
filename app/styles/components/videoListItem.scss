@@ -1,0 +1,47 @@
+.video-item-container {
+  display: block;
+  border-bottom: 1px solid black;
+
+  &:hover{
+    background: silver;
+  }
+
+  .video-item-body {
+    flex: 1;
+    border-radius: 5px;
+    padding: 10px;
+
+    .video-item {
+      display: flex;
+      margin: 5px 5px 5px 0;
+
+      .img {
+        width: 100px;
+        height: 60px;
+        margin-right: 5px;
+        border: 1px solid transparent;
+
+        & :hover {
+          border-color: $secondary-color;
+        }
+
+      }
+
+      .info {
+
+        a {
+          color: $black;
+          text-decoration: none;
+          &:hover {
+            text-decoration: underline;
+          }
+        }
+
+        .video-description {
+          font-size: 12px;
+          width: 600px;
+        }
+      }
+    }
+  }
+}
