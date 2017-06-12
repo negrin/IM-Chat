@@ -1,13 +1,19 @@
-export const addNewComment = (comment) => {
+export const addComment = (comment) => {
     return {
-        type: 'ADD_NEW_COMMENT',
+        type: 'ADD_COMMENT',
         payload: comment
     };
 };
-export const getComments = (playerID) => {
+export const removeComment = (comment_id) => {
+    return {
+        type: 'REMOVE_COMMENT',
+        payload: comment_id
+    };
+};
+export const getComments = (playerID, limit) => {
     return {
         type: 'GET_COMMENTS',
-        payload: playerID
+        payload: { playerID, limit }
     };
 };
 export const syncComments = (comments) => {

@@ -1,7 +1,25 @@
+export const addUser = (user) => {
+    return {
+        type: 'ADD_USER',
+        payload: user
+    };
+};
+export const removeUser = (user_id) => {
+    return {
+        type: 'REMOVE_USER',
+        payload: user_id
+    };
+};
+export const updateUser = (user_id, user) => {
+    return {
+        type: 'UPDATE_USER',
+        payload: { user_id, user }
+    };
+};
 export const getUsers = (playerID) => {
     return {
         type: 'GET_USERS',
-        payload: playerID
+        payload: { playerID }
     };
 };
 export const syncUsers = (users) => {
@@ -10,27 +28,27 @@ export const syncUsers = (users) => {
         payload: { users }
     };
 };
-export const postNewUser = (user, playerID) => {
-    return {
-        type: 'POST_NEW_USER',
-        payload: { user, playerID }
-    };
-};
 export const setActiveUser = (name, email, id) => {
     return {
         type: 'SET_ACTIVE_USER',
         payload: { name, email, id }
     };
 };
-export const removeUser = (id, playerID) => {
-    return {
-        type: 'REMOVE_USER',
-        payload: { id, playerID }
-    };
-};
 export const isTyping = (id, value, playerID) => {
     return {
         type: 'IS_TYPING',
         payload: { id, value, playerID }
+    };
+};
+export const userSignIn = (user, playerID) => {
+    return {
+        type: 'USER_SIGN_IN',
+        payload: { user, playerID }
+    };
+};
+export const userSignOut = (id, playerID) => {
+    return {
+        type: 'USER_SIGN_OUT',
+        payload: { id, playerID }
     };
 };

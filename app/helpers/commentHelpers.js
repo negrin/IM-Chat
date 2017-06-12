@@ -1,9 +1,18 @@
+export const getCommentCommandAndParams = (comment) => {
+    if (comment[0] === '/') {
+        return comment.substr(1).split(' ', 2);
+    }
+    return null;
+};
+
 export const getCommentCommand = (comment) => {
-    return comment.substr(1).split(' ')[0];
+    const commandParsed = getCommentCommandAndParams(comment);
+    return commandParsed && commandParsed[0];
 };
 
 export const getCommentCommandParam = (comment) => {
-    return comment.substr(1).split(' ')[1];
+    const commandParsed = getCommentCommandAndParams(comment);
+    return commandParsed && commandParsed[1];
 };
 
 export const CommandType = {

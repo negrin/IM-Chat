@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import { setActiveUser, postNewUser, removeUser } from '../reduxStore/actions/usersActions';
+import { setActiveUser, userSignIn, userSignOut } from '../reduxStore/actions/usersActions';
 
 class SingIn extends React.Component {
 
@@ -46,7 +46,7 @@ class SingIn extends React.Component {
                 isTyping: false
             };
 
-            this.props.postNewUser(newUser, this.props.playerID);
+            this.props.userSignIn(newUser, this.props.playerID);
             this.nameInput.value = '';
             this.setState({ isSingInOver: true });
         } else {
@@ -65,7 +65,7 @@ class SingIn extends React.Component {
     _handleSingOut() {
         this.props.users.find((user) => {
             if (user.userID === this.props.activeUser.id) {
-                this.props.removeUser(user.id, this.props.playerID);
+                this.props.userSignOut(user.id, this.props.playerID);
                 return true;
             }
         });
@@ -113,9 +113,9 @@ SingIn.propTypes = {
     playerID: React.PropTypes.string,
     activeUser: React.PropTypes.object,
     setActiveUser: React.PropTypes.func,
-    removeUser: React.PropTypes.func,
-    postNewUser: React.PropTypes.func
+    userSignOut: React.PropTypes.func,
+    userSignIn: React.PropTypes.func
 
 };
 
-export default connect(mapStateToProps, { setActiveUser, postNewUser, removeUser })(SingIn);
+export default connect(mapStateToProps, { setActiveUser, userSignIn, userSignOut })(SingIn);
