@@ -94,7 +94,7 @@ class Main extends React.Component {
                 <SingIn playerID={ this.props.params.playerID }/>
                 <div className="chat">
                     <div className="chat-left-panel">
-                        <div>
+                        <div className="users-list">
                             { this.props.users.map((user) => {
                                 return <User key={ user.id } user={ user }/>;
                             }) }
