@@ -40,13 +40,17 @@ class FirebaseAPI {
 
     // REALTIME DATABASE
     // ************************************************
-    add(path, payload) {
-        this.ref(path).set(payload).then((e) => {
+    set(path, payload, callback) {
+        this.ref(path).set(payload).then(function() {
+            callback && callback(payload);
+        }, function(error) {
+            console.log(error);
         });
     }
 
     push(path, payload, callback) {
-        this.ref(path).push(payload).then(function(e) {
+        this.ref(path).push(payload).once('value').then(function(snapshot) {
+            callback && callback(snapshot.val(), snapshot.key);
         }, function(error) {
             console.log(error);
         });

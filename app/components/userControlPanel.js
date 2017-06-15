@@ -2,6 +2,7 @@ import { connect } from 'react-redux';
 import { CommandType } from '../helpers/commentHelpers';
 import { postNewComment } from '../reduxStore/actions/commentActions';
 import { updateSettings } from '../reduxStore/actions/settingsActions';
+import { selectActiveUser } from '../reduxStore/selectors/activeUserSelectors';
 import moment from 'moment';
 
 class UserControlPanel extends React.Component {
@@ -61,7 +62,7 @@ class UserControlPanel extends React.Component {
 
 const mapStateToProps = (state) => {
     return {
-        activeUser: state.activeUserReducer.toJS()
+        activeUser: selectActiveUser(state)
     };
 };
 

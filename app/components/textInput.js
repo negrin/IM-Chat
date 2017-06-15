@@ -8,6 +8,7 @@ import VideoList from '../components/search/videoList';
 import debounce from 'debounce';
 import { search, getVideoInfo } from '../helpers/youtubeHelpers';
 import { updateSettings } from '../reduxStore/actions/settingsActions';
+import { selectActiveUser } from '../reduxStore/selectors/activeUserSelectors';
 
 
 const createVideo = (item) => {
@@ -27,6 +28,8 @@ class TextInput extends React.Component {
             isTextBoxEmpty: true,
             videos: null
         };
+
+        this.autoStopTypingTimeout = null;
 
         this.handleSearch = debounce(this.handleSearch.bind(this), 300);
         this.keydownListener = this.keydownListener.bind(this);
@@ -55,6 +58,7 @@ class TextInput extends React.Component {
 
     _getCommentDescription(commandType) {
         let comment = '';
+
         switch (commandType) {
             case CommandType.ADD:
                 comment = ' added:';
@@ -106,13 +110,16 @@ class TextInput extends React.Component {
     }
 
     _handleIsTyping(value) {
-        this.props.users.find((user) => {
-            if (user.userID === this.props.activeUser.id) {
-                this.props.isTyping(user.id, value, this.props.playerID);
-                setTimeout(() => { this.props.isTyping(user.id, false, this.props.playerID); }, 3000);
-                return true;
+        if (this.props.activeUser) {
+            this.props.isTyping(this.props.activeUser.id, value, this.props.playerID);
+            if (value) {
+                clearTimeout(this.autoStopTypingTimeout);
+                this.autoStopTypingTimeout = setTimeout(() => {
+                    this.autoStopTypingTimeout = null;
+                    this.props.isTyping(this.props.activeUser.id, false, this.props.playerID);
+                }, 3000);
             }
-        });
+        }
     }
 
     _handleChange() {
@@ -134,6 +141,7 @@ class TextInput extends React.Component {
             .then((data) => {
                 if (this.textInput.value.trim() !== '' && !this.textInput.value.startsWith('/')) {
                     const videos = data.items.map((item) => createVideo(item));
+
                     this.setState({ videos });
                 }
             })
@@ -142,7 +150,7 @@ class TextInput extends React.Component {
 
     sendVideoAsComment(videoId) {
         this.setState({ videos: [] });
-        this.textInput.value = '/add https://www.youtube.com/watch?v=' + videoId;
+        this.textInput.value = `/add https://www.youtube.com/watch?v=${videoId}`;
         this._handleSendNewComment();
     }
 
@@ -187,7 +195,7 @@ class TextInput extends React.Component {
 const mapStateToProps = (state) => {
     return {
         comments: state.commentReducer.toJS(),
-        activeUser: state.activeUserReducer.toJS(),
+        activeUser: selectActiveUser(state),
         users: state.userReducer.toJS()
     };
 };

@@ -7,11 +7,13 @@ export const getCommentCommandAndParams = (comment) => {
 
 export const getCommentCommand = (comment) => {
     const commandParsed = getCommentCommandAndParams(comment);
+
     return commandParsed && commandParsed[0];
 };
 
 export const getCommentCommandParam = (comment) => {
     const commandParsed = getCommentCommandAndParams(comment);
+
     return commandParsed && commandParsed[1];
 };
 

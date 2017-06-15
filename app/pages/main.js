@@ -139,4 +139,13 @@ Main.propTypes = {
     getSettings: React.PropTypes.func
 };
 
-export default connect(mapStateToProps, { getComments, getUsers, addComment, removeComment, addUser, removeUser, updateUser, getSettings })(Main);
+export default connect(mapStateToProps, {
+    getComments,
+    getUsers,
+    addComment,
+    removeComment,
+    addUser,
+    removeUser,
+    updateUser,
+    getSettings
+})(Main);

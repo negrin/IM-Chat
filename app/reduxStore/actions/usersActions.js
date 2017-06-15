@@ -28,10 +28,10 @@ export const syncUsers = (users) => {
         payload: { users }
     };
 };
-export const setActiveUser = (name, email, id) => {
+export const setActiveUser = (id) => {
     return {
         type: 'SET_ACTIVE_USER',
-        payload: { name, email, id }
+        payload: id
     };
 };
 export const isTyping = (id, value, playerID) => {

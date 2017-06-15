@@ -1,14 +1,14 @@
 import { combineReducers } from 'redux';
 import commentReducer from './reducers/commentReducer';
 import userReducer from './reducers/userReducer';
-import activeUserReducer from './reducers/avtiveUserReducer';
+import activeUserIdReducer from './reducers/avtiveUserIdReducer';
 import playerReducer from './reducers/playerReducer';
 import settingsReducer from './reducers/settingsReducer';
 
 const allReducers = combineReducers({
     commentReducer,
     userReducer,
-    activeUserReducer,
+    activeUserIdReducer,
     playerReducer,
     settingsReducer
 });

@@ -1,5 +1,6 @@
 import { connect } from 'react-redux';
 import { setActiveUser, userSignIn, userSignOut } from '../reduxStore/actions/usersActions';
+import { selectActiveUser } from '../reduxStore/selectors/activeUserSelectors';
 
 class SingIn extends React.Component {
 
@@ -33,16 +34,12 @@ class SingIn extends React.Component {
 
     _handleSingIn() {
         if (/\S/.test(this.nameInput.value)) {
-            const randomID = Math.floor((Math.random() * 30000) + 1);
             const name = this.nameInput.value;
             const email = this.emailInput && this.emailInput.value !== '' ? this.emailInput.value : name;
-
-            this.props.setActiveUser(name, email, randomID);
 
             const newUser = {
                 name,
                 email,
-                userID: randomID,
                 isTyping: false
             };
 
@@ -63,12 +60,7 @@ class SingIn extends React.Component {
     }
 
     _handleSingOut() {
-        this.props.users.find((user) => {
-            if (user.userID === this.props.activeUser.id) {
-                this.props.userSignOut(user.id, this.props.playerID);
-                return true;
-            }
-        });
+        this.props.userSignOut(this.props.activeUser.id, this.props.playerID);
     }
 
     render() {
@@ -104,14 +96,14 @@ class SingIn extends React.Component {
 const mapStateToProps = (state) => {
     return {
         users: state.userReducer.toJS(),
-        activeUser: state.activeUserReducer.toJS()
+        activeUser: selectActiveUser(state)
     };
 };
 
 SingIn.propTypes = {
     users: React.PropTypes.array,
     playerID: React.PropTypes.string,
-    activeUser: React.PropTypes.object,
+    activeUser: React.PropTypes.string,
     setActiveUser: React.PropTypes.func,
     userSignOut: React.PropTypes.func,
     userSignIn: React.PropTypes.func

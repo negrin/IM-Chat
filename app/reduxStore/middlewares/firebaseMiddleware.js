@@ -1,5 +1,5 @@
 import { syncComments } from '../actions/commentActions';
-import { syncUsers } from '../actions/usersActions';
+import { syncUsers, addUser, setActiveUser } from '../actions/usersActions';
 import { syncSettings } from '../actions/settingsActions';
 import FirebaseAPI from '../../firebase/firebase';
 
@@ -24,16 +24,18 @@ export default function firebaseMiddleware({ getState, dispatch }) {
                 FirebaseAPI.push(`players/${ action.payload.playerID }/comments`, action.payload.comment);
                 break;
             case 'USER_SIGN_IN':
-                FirebaseAPI.push(`players/${ action.payload.playerID }/users`, action.payload.user);
+                FirebaseAPI.push(`players/${ action.payload.playerID }/users`, action.payload.user, (user, id) => {
+                    dispatch(setActiveUser(id));
+                });
                 break;
             case 'USER_SIGN_OUT':
                 FirebaseAPI.remove(`players/${ action.payload.playerID }/users/${ action.payload.id }`);
                 break;
             case 'IS_TYPING':
-                FirebaseAPI.add(`players/${ action.payload.playerID }/users/${ action.payload.id }/isTyping`, action.payload.value);
+                FirebaseAPI.set(`players/${ action.payload.playerID }/users/${ action.payload.id }/isTyping`, action.payload.value);
                 break;
             case 'UPDATE_SETTINGS':
-                FirebaseAPI.add(`players/${ action.payload.playerID }/settings/${ action.payload.key }`, action.payload.value);
+                FirebaseAPI.set(`players/${ action.payload.playerID }/settings/${ action.payload.key }`, action.payload.value);
                 break;
             case 'GET_SETTINGS':
                 const getSettingsFromFB = (e) => {
